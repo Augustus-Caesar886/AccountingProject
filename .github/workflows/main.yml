@@ -15,6 +15,6 @@ jobs:
 
     - name: Validate Build
       run: |
-        cmake .,
+        cmake -S . Bbuild,
         make,
         ./bin/AccountingTests
