@@ -7,8 +7,10 @@ using ::testing::InSequence;
 #include "../header/Date.h"
 
 
+#include <stdexcept>
 #include <string>
 using std::string;
+using std::invalid_argument;
 
 TEST(dateTests, testDateNumberConstructor1) {
     DateUnit year = 2000, month = 1, day = 1;
@@ -92,4 +94,29 @@ TEST(dateTests, testDateStringForm4) {
     string date = "01/06/0036";
     Date d(date);
     EXPECT_EQ(date, d.stringForm());
+}
+
+TEST(dateTests, testThrow) {
+    string date = "ab/cd/efgh";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testNegativeMonthThrow) {
+    string date = "-1/05/2003";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testNegativeDayThrow) {
+    string date = "01/-5/2003";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testNegativeYearThrow) {
+    string date = "01/05/-203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testAllNegativesThrow) {
+    string date = "-1/-5/-203";
+    EXPECT_THROW(Date d(date), invalid_argument);
 }
