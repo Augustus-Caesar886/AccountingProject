@@ -96,8 +96,13 @@ TEST(dateTests, testDateStringForm4) {
     EXPECT_EQ(date, d.stringForm());
 }
 
-TEST(dateTests, testThrow) {
+TEST(dateTests, testObviousThrow) {
     string date = "ab/cd/efgh";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testSubtleThrow) {
+    string date = "01/04/200O"; //Ends with letter 'O' rather than number 0
     EXPECT_THROW(Date d(date), invalid_argument);
 }
 
