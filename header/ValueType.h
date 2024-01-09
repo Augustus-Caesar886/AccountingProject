@@ -2,7 +2,7 @@
 #define VALUETYPE_H
 
 enum ValueType {
-    debit, credit;
+    debit, credit
 };
 
 #endif

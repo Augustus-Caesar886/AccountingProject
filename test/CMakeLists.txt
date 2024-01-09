@@ -6,6 +6,8 @@ ADD_SUBDIRECTORY(googletest)
 ADD_EXECUTABLE(AccountingTests
     DateTests.cpp
     ../src/Date.cpp
+    ValueTypeTests.cpp
+    ../src/ValueType.cpp
 )
 
 target_link_libraries(AccountingTests gmock gtest gtest_main)
