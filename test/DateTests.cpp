@@ -7,8 +7,10 @@ using ::testing::InSequence;
 #include "../header/Date.h"
 
 
+#include <stdexcept>
 #include <string>
 using std::string;
+using std::invalid_argument;
 
 TEST(dateTests, testDateNumberConstructor1) {
     DateUnit year = 2000, month = 1, day = 1;
@@ -92,4 +94,69 @@ TEST(dateTests, testDateStringForm4) {
     string date = "01/06/0036";
     Date d(date);
     EXPECT_EQ(date, d.stringForm());
+}
+
+TEST(dateTests, testObviousThrow) {
+    string date = "ab/cd/efgh";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testSubtleThrow) {
+    string date = "01/04/200O"; //Ends with letter 'O' rather than number 0
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testNegativeMonthThrow) {
+    string date = "-1/05/2003";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testNegativeDayThrow) {
+    string date = "01/-5/2003";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testNegativeYearThrow) {
+    string date = "01/05/-203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testAllNegativesThrow) {
+    string date = "-1/-5/-203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testLongMonthExcept) {
+    string date = "101/05/2203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testLongDayExcept) {
+    string date = "01/105/2203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testLongYearExcept) {
+    string date = "01/05/12203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testShortMonthExcept) {
+    string date = "1/05/2203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testShortDayExcept) {
+    string date = "01/5/2203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testShortYearExcept) {
+    string date = "01/05/203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testShortFieldsExcept) {
+    string date = "1/5/203";
+    EXPECT_THROW(Date d(date), invalid_argument);
 }
