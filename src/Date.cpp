@@ -7,6 +7,7 @@ using std::invalid_argument;
 using std::stoi;
 
 Date::Date(const string& mmddyyyy) {
+    if(mmddyyyy.length() != 10) throw invalid_argument("not in mm/dd/yyyy format");
     month = stoi(mmddyyyy.substr(0, 2));
     if(month < 0 or month > 12) throw invalid_argument("invalid month");
     if(month != (mmddyyyy[0]-'0') * 10 + (mmddyyyy[1]-'0')) throw invalid_argument("bad month input");

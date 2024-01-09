@@ -125,3 +125,38 @@ TEST(dateTests, testAllNegativesThrow) {
     string date = "-1/-5/-203";
     EXPECT_THROW(Date d(date), invalid_argument);
 }
+
+TEST(dateTests, testLongMonthExcept) {
+    string date = "101/05/2203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testLongDayExcept) {
+    string date = "01/105/2203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testLongYearExcept) {
+    string date = "01/05/12203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testShortMonthExcept) {
+    string date = "1/05/2203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testShortDayExcept) {
+    string date = "01/5/2203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testShortYearExcept) {
+    string date = "01/05/203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
+
+TEST(dateTests, testShortFieldsExcept) {
+    string date = "1/5/203";
+    EXPECT_THROW(Date d(date), invalid_argument);
+}
