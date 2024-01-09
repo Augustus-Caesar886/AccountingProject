@@ -13,5 +13,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 ADD_EXECUTABLE(AccountingProject 
     src/main.cpp
     src/Date.cpp
+    src/Period.cpp
 )
 
