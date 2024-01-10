@@ -6,6 +6,8 @@ ADD_SUBDIRECTORY(googletest)
 ADD_EXECUTABLE(AccountingTests
     DateTests.cpp
     ../src/Date.cpp
+    PeriodTests.cpp
+    ../src/Period.cpp
     ValueTypeTests.cpp
     ../src/ValueType.cpp
 )

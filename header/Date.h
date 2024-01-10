@@ -11,6 +11,9 @@ struct Date {
     Date(DateUnit year, DateUnit month, DateUnit day) : year(year), month(month), day(day) {}
     Date(const string&);
     string stringForm() const;
+
+    bool operator==(const Date&) const;
+    bool operator!=(const Date&) const;
 };
 
 #endif

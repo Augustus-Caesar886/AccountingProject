@@ -160,3 +160,15 @@ TEST(dateTests, testShortFieldsExcept) {
     string date = "1/5/203";
     EXPECT_THROW(Date d(date), invalid_argument);
 }
+
+TEST(dateTests, testEquality) {
+    string date = "01/05/2003";
+    Date d(date);
+    EXPECT_EQ(d, d);
+}
+
+TEST(dateTests, testNoEquality) {
+    string date1 = "01/05/2003", date2 = "01/05/2004";
+    Date d1(date1), d2(date2);
+    EXPECT_NE(d1, d2);
+}
