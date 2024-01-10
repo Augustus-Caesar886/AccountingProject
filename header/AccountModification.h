@@ -2,6 +2,7 @@
 #define ACCOUNT_MODIFICATION_H
 
 #include "ValueType.h"
+#include "Date.h"
 
 #include <string>
 using std::string;
@@ -13,10 +14,12 @@ class AccountModification {
     protected:
         double amount;
         ValueType type;
+        Date day;
         string description;
     public:
-        AccountModification(double amount, ValueType type, const string& description) : amount(amount), type(type), description(description) {}
+        AccountModification(double amount, ValueType type, const Date &day, const string& description) : amount(amount), type(type), day(day), description(description) {}
         pair<double, ValueType> get() const { return pair(amount, type); }
+        const Date& getDate() const { return day; }
         const string& getDescription() const { return description; }
 };
 
