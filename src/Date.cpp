@@ -38,3 +38,11 @@ string Date::stringForm() const {
 
     return output;
 }
+
+bool Date::operator==(const Date& operand) const {
+    return year == operand.year and month == operand.month and day == operand.day;
+}
+
+bool Date::operator!=(const Date& operand) const {
+    return !( *this==operand );
+}
