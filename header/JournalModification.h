@@ -3,7 +3,7 @@
 
 #include "AccountModification.h"
 
-class JournalModification : public LedgerModification {
+class JournalModification : public AccountModification {
     //TODO: implement class when Account.h is defined
 };
 
