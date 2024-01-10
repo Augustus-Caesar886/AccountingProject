@@ -14,5 +14,6 @@ ADD_EXECUTABLE(AccountingProject
     src/main.cpp
     src/Date.cpp
     src/Period.cpp
+    src/ValueType.cpp
 )
 

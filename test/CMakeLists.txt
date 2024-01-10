@@ -8,6 +8,8 @@ ADD_EXECUTABLE(AccountingTests
     ../src/Date.cpp
     PeriodTests.cpp
     ../src/Period.cpp
+    ValueTypeTests.cpp
+    ../src/ValueType.cpp
 )
 
 target_link_libraries(AccountingTests gmock gtest gtest_main)
