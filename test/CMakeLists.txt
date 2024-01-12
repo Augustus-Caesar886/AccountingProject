@@ -16,6 +16,8 @@ ADD_EXECUTABLE(AccountingTests
     ../src/JournalModification.cpp
     LedgerModificationTests.cpp
     ../src/LedgerModification.cpp
+    AccountRecordsTests.cpp
+    ../src/AccountRecords.cpp
 )
 
 target_link_libraries(AccountingTests gmock gtest gtest_main)

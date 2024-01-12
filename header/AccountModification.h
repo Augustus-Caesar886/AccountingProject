@@ -16,8 +16,8 @@ class AccountModification {
         ValueType type;
         Date day;
         string description;
-    public:
         AccountModification(double amount, ValueType type, const Date &day, const string& description) : amount(amount), type(type), day(day), description(description) {}
+    public:
         pair<double, ValueType> get() const { return pair(amount, type); }
         const Date& getDate() const { return day; }
         const string& getDescription() const { return description; }

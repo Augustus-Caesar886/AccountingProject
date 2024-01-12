@@ -18,5 +18,6 @@ ADD_EXECUTABLE(AccountingProject
     src/AccountModification.cpp
     src/JournalModification.cpp
     src/LedgerModification.cpp
+    src/AccountRecords.cpp
 )
 
