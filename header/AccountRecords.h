@@ -13,7 +13,7 @@ class AccountRecords {
         double beginningBalance, endingBalance;
         DateUnit year;
         ValueType accountType;
-        AccountRecords(ValueType accountType, double beginningBalance = 0) : accountType(accountType), beginningBalance(beginningBalance), endingBalance(beginningBalance) {}
+        AccountRecords(DateUnit year, ValueType accountType, double beginningBalance = 0) : year(year), accountType(accountType), beginningBalance(beginningBalance), endingBalance(beginningBalance) {}
     public:
         ValueType getValueType() const { return accountType; }
         double getBeginningBalance() const { return beginningBalance; }
