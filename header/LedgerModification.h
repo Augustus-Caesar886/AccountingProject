@@ -6,6 +6,7 @@
 class LedgerModification : public AccountModification {
     public:
         LedgerModification(double amount, ValueType type, const Date &day, const string& description) : AccountModification(amount, type, day, description) {}
+        bool operator==(const LedgerModification&) const;
 };
 
 #endif

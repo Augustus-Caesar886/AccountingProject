@@ -22,7 +22,7 @@ class AccountRecords {
         void setEndingBalance(double eb) { endingBalance = eb; }
         DateUnit getYear() const { return year; }
         virtual void addEntry(const LedgerModification&);
-        virtual vector<LedgerModification> getEntries() = 0;
+        virtual const vector<LedgerModification>& getEntries() const = 0;
 };
 
 #endif

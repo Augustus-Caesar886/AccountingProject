@@ -20,7 +20,7 @@ class AccountRecordsTestDriver : public AccountRecords {
     public:
         AccountRecordsTestDriver(DateUnit year, ValueType vt, double amt) : AccountRecords(year, vt, amt) {}
 
-        vector<LedgerModification> getEntries() { return modifications; }
+        const vector<LedgerModification>& getEntries() const { return modifications; }
 };
 
 TEST(AccountRecordsTests, testConstructor) {
@@ -48,4 +48,8 @@ TEST(AccountRecordsTests, testThrowBadYear) {
     EXPECT_THROW({
         exampleMonth.addEntry(LedgerModification(100, ValueType::credit, Date("01/02/2001"), "Pay with $100 cash"));
     }, invalid_argument);
+
+    EXPECT_EQ(exampleMonth.getYear(), 2000);
+    EXPECT_EQ(exampleMonth.getBeginningBalance(), 1000);
+    EXPECT_EQ(exampleMonth.getEndingBalance(), 1000);
 }
