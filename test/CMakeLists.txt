@@ -18,6 +18,12 @@ ADD_EXECUTABLE(AccountingTests
     ../src/LedgerModification.cpp
     AccountRecordsTests.cpp
     ../src/AccountRecords.cpp
+    MonthRecordsTests.cpp
+    ../src/MonthRecords.cpp
+    QuarterRecordsTests.cpp
+    ../src/QuarterRecords.cpp
+    YearRecordsTests.cpp
+    ../src/YearRecords.cpp
 )
 
 target_link_libraries(AccountingTests gmock gtest gtest_main)
