@@ -80,6 +80,8 @@ TEST(QuarterRecordsTests, testAddEntry) {
 
     EXPECT_EQ(q3.getBeginningBalance(), 1000);
     EXPECT_EQ(q3.getEndingBalance(), 1000);
+    EXPECT_EQ(q3.getMonthRecords()[0].getEndingBalance(), 900);
+    EXPECT_EQ(q3.getMonthRecords()[1].getBeginningBalance(), 900);
     ASSERT_EQ(q3.getMonthRecords()[0].getEntries().size(), 1);
     EXPECT_EQ(q3.getMonthRecords()[0].getEntries()[0], modification1);
     EXPECT_EQ(q3.getEntries()[0], modification1);
@@ -93,6 +95,8 @@ TEST(QuarterRecordsTests, testAddEntry) {
 
     EXPECT_EQ(q3.getBeginningBalance(), 1000);
     EXPECT_EQ(q3.getEndingBalance(), 1200);
+    EXPECT_EQ(q3.getMonthRecords()[0].getEndingBalance(), 900);
+    EXPECT_EQ(q3.getMonthRecords()[1].getBeginningBalance(), 900);
     ASSERT_EQ(q3.getMonthRecords()[0].getEntries().size(), 1);
     EXPECT_EQ(q3.getMonthRecords()[0].getEntries()[0], modification1);
     EXPECT_EQ(q3.getEntries()[0], modification1);
@@ -108,6 +112,10 @@ TEST(QuarterRecordsTests, testAddEntry) {
 
     EXPECT_EQ(q3.getBeginningBalance(), 1000);
     EXPECT_EQ(q3.getEndingBalance(), 1300);
+    EXPECT_EQ(q3.getMonthRecords()[0].getEndingBalance(), 900);
+    EXPECT_EQ(q3.getMonthRecords()[1].getBeginningBalance(), 900);
+    EXPECT_EQ(q3.getMonthRecords()[1].getEndingBalance(), 1200);
+    EXPECT_EQ(q3.getMonthRecords()[2].getBeginningBalance(), 1200);
     ASSERT_EQ(q3.getMonthRecords()[0].getEntries().size(), 1);
     EXPECT_EQ(q3.getMonthRecords()[0].getEntries()[0], modification1);
     EXPECT_EQ(q3.getEntries()[0], modification1);
@@ -164,4 +172,22 @@ TEST(QuarterRecordsTests, testGetEntriesAndMonthEntries) {
     EXPECT_EQ(q2.getMonthRecords()[1].getEntries()[1], mayModification2);
     EXPECT_EQ(q2.getMonthRecords()[2].getEntries()[0], juneModification1);
     EXPECT_EQ(q2.getEntries(), expected);
+
+    EXPECT_EQ(q2.getMonthRecords()[0].getBeginningBalance(), 1000);
+    EXPECT_EQ(q2.getMonthRecords()[0].getEndingBalance(), 900);
+    EXPECT_EQ(q2.getMonthRecords()[1].getBeginningBalance(), 900);
+    EXPECT_EQ(q2.getMonthRecords()[1].getEndingBalance(), 400);
+    EXPECT_EQ(q2.getMonthRecords()[2].getBeginningBalance(), 400);
+    EXPECT_EQ(q2.getMonthRecords()[2].getEndingBalance(), 1100);
+}
+
+TEST(QuarterRecordsTests, testProperMonthMaintenance) {
+    QuarterRecords q3(2001, 3, ValueType::debit, 1000); //Start with $1000 cash
+    q3.addEntry(LedgerModification(100, ValueType::debit, Date("07/17/2001"), "Earn $100 cash"));
+    q3.addEntry(LedgerModification(100, ValueType::debit, Date("09/17/2001"), "Earn $100 cash"));
+    
+    EXPECT_EQ(q3.getMonthRecords()[1].getBeginningBalance(), 1100);
+    EXPECT_EQ(q3.getMonthRecords()[1].getEndingBalance(), 1100);
+    EXPECT_EQ(q3.getMonthRecords()[2].getBeginningBalance(), 1100);
+    EXPECT_EQ(q3.getMonthRecords()[2].getEndingBalance(), 1200);
 }
