@@ -202,3 +202,38 @@ TEST(QuarterRecordsTests, testProperMonthMaintenanceAlternate) {
     EXPECT_EQ(q3.getMonthRecords()[1].getEndingBalance(), 1100);
     EXPECT_EQ(q3.getMonthRecords()[2].getEndingBalance(), 1100);
 }
+
+TEST(QuarterRecordsTests, testPeriodAdjustments) {
+    QuarterRecords q1(2001, 1, ValueType::debit, 100);
+    QuarterRecords q2(2001, 2, ValueType::debit, 100);
+    q1.addEntry(LedgerModification(900, ValueType::debit, Date("03/31/2001"), "Earn $900 cash"));
+    q2.adjustPeriodBalances(1000); //Set the new BB and EB to 1000 to reflect changes in quarter 1 balances
+
+    EXPECT_EQ(q2.getBeginningBalance(), 1000);
+    EXPECT_EQ(q2.getEndingBalance(), 1000);
+    for(unsigned i = 0; i < 3; ++i) {
+        EXPECT_EQ(q2.getMonthRecords()[i].getBeginningBalance(), 1000);
+        EXPECT_EQ(q2.getMonthRecords()[i].getEndingBalance(), 1000);
+    }
+}
+
+TEST(QuarterRecordsTests, testPeriodAdjustmentsThrow) {
+    QuarterRecords q1(2001, 1, ValueType::debit, 100);
+    QuarterRecords q2(2001, 2, ValueType::debit, 100);
+    q1.addEntry(LedgerModification(900, ValueType::debit, Date("03/31/2001"), "Earn $900 cash"));
+    q2.addEntry(LedgerModification(100, ValueType::debit, Date("04/01/2001"), "Earn $100 cash")); //Now that an entry has been added to q2, modifying BB and EB shouldn't be possible
+    
+    EXPECT_THROW({
+        q2.adjustPeriodBalances(1000); 
+    }, invalid_argument);
+
+    EXPECT_EQ(q2.getEntries().size(), 1);
+    EXPECT_EQ(q2.getBeginningBalance(), 100);
+    EXPECT_EQ(q2.getEndingBalance(), 200);
+    EXPECT_EQ(q2.getMonthRecords()[0].getBeginningBalance(), 100);
+    EXPECT_EQ(q2.getMonthRecords()[0].getEndingBalance(), 200);
+    for(unsigned i = 0; i < 2; ++i) {
+        EXPECT_EQ(q2.getMonthRecords()[i+1].getBeginningBalance(), 200);
+        EXPECT_EQ(q2.getMonthRecords()[i+1].getEndingBalance(), 200);
+    }
+}

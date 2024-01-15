@@ -9,10 +9,8 @@ QuarterRecords::QuarterRecords(DateUnit year, DateUnit quarter, ValueType valueT
     if(quarter < 1 or quarter > 4) throw invalid_argument("Accounting quarter not within bounds");
 
     for(unsigned i = 1; i <= 3; ++i) {
-        months.push_back(MonthRecords(year, i + 3 * (quarter - 1), valueType, 0));
+        months.push_back(MonthRecords(year, i + 3 * (quarter - 1), valueType, beginningBalance));
     }
-    months[0].setBeginningBalance(beginningBalance);
-    months[0].setEndingBalance(beginningBalance);
 }
 
 void QuarterRecords::addEntry(const LedgerModification& entry) {
@@ -33,5 +31,15 @@ void QuarterRecords::addEntry(const LedgerModification& entry) {
     for(unsigned i = entry.getDate().month - 3 * (quarter-1); i < 3; ++i) { //Prepare future records
         months[i].setBeginningBalance(months[entry.getDate().month - 3 * (quarter-1) - 1].getEndingBalance());
         months[i].setEndingBalance(months[entry.getDate().month - 3 * (quarter-1) - 1].getEndingBalance());
+    }
+}
+
+void QuarterRecords::adjustPeriodBalances(double newValue) {
+    if(quarterRecords.size() != 0) throw invalid_argument("Attempting to change BB and EB of a quarter with existing ledger entries");
+
+    beginningBalance = endingBalance = newValue;
+    for(unsigned i = 0; i < months.size(); ++i) {
+        months[i].setBeginningBalance(newValue);
+        months[i].setEndingBalance(newValue);
     }
 }

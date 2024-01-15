@@ -19,6 +19,7 @@ class QuarterRecords : public AccountRecords {
         void addEntry(const LedgerModification&);
         const vector<LedgerModification> &getEntries() const { return quarterRecords; }
         const vector<MonthRecords> &getMonthRecords() const { return months; }
+        void adjustPeriodBalances(double newValue); //Sets beginningBalance and endingBalance, only to be used on QuarterRecords objects with no entries
 };
 
 #endif
