@@ -152,6 +152,14 @@ TEST(QuarterRecordsTests, testAddEntryThrow) {
     for(unsigned i = 0; i < 3; ++i) {
         EXPECT_EQ(q2.getMonthRecords()[i].getEntries().size(), 0);
     }
+
+    q1.addEntry(LedgerModification(100, ValueType::credit, Date("03/01/2001"), "Pay $100 in cash"));
+    EXPECT_THROW({
+        q1.addEntry(LedgerModification(100, ValueType::credit, Date("02/01/2001"), "Pay $100 in cash"));
+    }, invalid_argument);
+    EXPECT_THROW({
+        q1.addEntry(LedgerModification(100, ValueType::credit, Date("01/01/2001"), "Pay $100 in cash"));
+    }, invalid_argument);
 }
 
 TEST(QuarterRecordsTests, testGetEntriesAndMonthEntries) {

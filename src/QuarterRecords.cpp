@@ -15,6 +15,9 @@ QuarterRecords::QuarterRecords(DateUnit year, DateUnit quarter, ValueType valueT
 
 void QuarterRecords::addEntry(const LedgerModification& entry) {
     if(entry.getDate().month < (quarter - 1) * 3 + 1 or entry.getDate().month > quarter * 3) throw invalid_argument("Invalid month for Quarter " + to_string(quarter));
+    for(unsigned i = entry.getDate().month - 3 * (quarter-1); i < 3; ++i) {
+        if(months[i].getEntries().size() != 0) throw invalid_argument("Entry dated " + entry.getDate().stringForm() + " is invalid for quarter " + to_string(quarter));
+    }
 
     AccountRecords::addEntry(entry);
     if(entry.getDate().month - 3 * (quarter-1) - 1 != 0 and months[entry.getDate().month - 3 * (quarter-1) - 1].getEntries().size() == 0) { //Adjust past records
