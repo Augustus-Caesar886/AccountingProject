@@ -22,5 +22,6 @@ ADD_EXECUTABLE(AccountingProject
     src/MonthRecords.cpp
     src/QuarterRecords.cpp
     src/YearRecords.cpp
+    src/Account.cpp
 )
 

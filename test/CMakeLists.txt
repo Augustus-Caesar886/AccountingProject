@@ -24,6 +24,8 @@ ADD_EXECUTABLE(AccountingTests
     ../src/QuarterRecords.cpp
     YearRecordsTests.cpp
     ../src/YearRecords.cpp
+    AccountTests.cpp
+    ../src/Account.cpp
 )
 
 target_link_libraries(AccountingTests gmock gtest gtest_main)
