@@ -49,7 +49,7 @@ class PrototypeFileReader {
     public:
         PrototypeFileReader(ifstream &inputFile, DateUnit year);
         Account& getAccount(const string& name) { return accountLibrary.find(name)->second; }
-        
+        vector<Account> getAccounts() const;
 };
 
 

@@ -62,3 +62,12 @@ PrototypeFileReader::PrototypeFileReader(ifstream &inputFile, DateUnit year) {
         }
     }   
 }
+
+vector<Account> PrototypeFileReader::getAccounts() const {
+    vector<Account> accounts;
+    accounts.reserve(accountLibrary.size());
+    for(auto it : accountLibrary) {
+        accounts.push_back(it.second);
+    }
+    return accounts;
+}

@@ -3,6 +3,7 @@ using std::cout;
 using std::endl;
 using std::cin;
 using std::string;
+using std::getline;
 
 #include <fstream>
 using std::ifstream;
@@ -30,6 +31,7 @@ int main() {
         cout << "Menu" << endl;
         cout << "1. See account data" << endl;
         cout << "2. Add new Ledger entry" << endl;
+        cout << "3. Quick trial balance" << endl;
         cout << "q: quit" << endl;
 
         cin >> input;
@@ -37,15 +39,73 @@ int main() {
         if(input == "1") {
             cout << "Enter account name: " << endl;
             getline(cin, input);
-            Account &found = fileReader.getAccount(input);
+            const Account &found = fileReader.getAccount(input);
             cout << "---" << input << "---" << endl;
-            cout << "BB: " << found.getBeginningBalance() << endl;
+            cout << "BB\t\t" << found.getBeginningBalance() << endl;
             for(auto it : found.getEntries()) {
-                cout << it.getDate().stringForm() << (it.get().second == ValueType::debit ? " dr " : " cr ") << it.get().first << endl;
+                cout << it.getDate().stringForm() << (it.get().second == ValueType::debit ? " dr\t" : " cr\t") << it.get().first << "\t| " << it.getDescription() << endl;
             }
-            cout << "EB: " << found.getBalance() << endl << endl;
+            cout << "EB\t\t" << found.getBalance() << endl << endl;
         } else if(input == "2") {
-
+            cout << "Enter date (mm/dd/yyyy): " << endl; 
+            cin >> input;
+            cin.get();
+            Date day(input);
+            string description;
+            cout << "Enter description: " << endl; 
+            getline(cin, description);
+            cout << "Input the entries in the following form: dr (or cr) \"Account Name Here\" amount" << endl;
+            cout << "d to exit to main menu" << endl;
+            input = "";
+            vector<LedgerModification> modifications;
+            vector<string> accNames;
+            while(input != "d") {
+                cin >> input;
+                if(input == "d") {
+                    double debits = 0, credits = 0;
+                    for(auto it : modifications) {
+                        if(it.get().second == ValueType::debit) {
+                            debits += it.get().first;
+                        } else {
+                            credits += it.get().first;
+                        }
+                    }
+                    if(debits != credits) {
+                        cout << "Entries not balanced, discarding changes" << endl;
+                        accNames.clear();
+                        modifications.clear();
+                    }
+                    continue;
+                }
+                ValueType vt;
+                if(input == "dr") {
+                    vt = ValueType::debit;
+                } else if (input == "cr") {
+                    vt = ValueType::credit;
+                }
+                getline(cin, input, '"');
+                getline(cin, input, '"');
+                string accountName = input;
+                double amount = 0;
+                cin >> amount;
+                cin.get();
+                accNames.push_back(accountName);
+                modifications.push_back(LedgerModification(amount, vt, day, description));
+            }
+            for(unsigned i = 0; i < accNames.size(); ++i) {
+                fileReader.getAccount(accNames[i]).addEntry(modifications[i]);
+            }
+        } else if(input == "3") {
+            double debits = 0, credits = 0;
+            for(auto it : fileReader.getAccounts()) {
+                if(it.getBalanceType() == ValueType::debit) {
+                    debits += it.getBalance();
+                } else if(it.getBalanceType() == ValueType::credit){
+                    credits += it.getBalance();
+                }
+            }
+            cout << "Debits: " << debits << endl;
+            cout << "Credits: " << credits << endl;
         }
     }
 
