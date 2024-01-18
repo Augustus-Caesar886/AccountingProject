@@ -23,5 +23,6 @@ ADD_EXECUTABLE(AccountingProject
     src/QuarterRecords.cpp
     src/YearRecords.cpp
     src/Account.cpp
+    src/PrototypeFileReader.cpp
 )
 
