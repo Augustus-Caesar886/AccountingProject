@@ -44,12 +44,17 @@ class AccountDriver : public Account {
 class PrototypeFileReader {
     private:
         unordered_map<string, Account> accountLibrary;
+        vector<LedgerModification> entries;
+        vector<string> accnames;
         ValueType charToValueType(char);
         AccountType charToAccountType(char);
     public:
         PrototypeFileReader(ifstream &inputFile, DateUnit year);
         Account& getAccount(const string& name) { return accountLibrary.find(name)->second; }
         vector<Account> getAccounts() const;
+        const vector<string> &getNames() const { return accnames; }
+        const vector<LedgerModification> &getEntries() const { return entries; }
+        void push_back(const LedgerModification& lm, const string& accname) { entries.push_back(lm); accnames.push_back(accname); }
 };
 
 

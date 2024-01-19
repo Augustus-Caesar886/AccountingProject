@@ -7,9 +7,11 @@ using std::getline;
 
 #include <fstream>
 using std::ifstream;
+using std::ofstream;
 
 #include "../header/Date.h"
 #include "../header/PrototypeFileReader.h"
+#include "../header/PrototypeFileWriter.h"
 
 int main() {
     cout << "Enter company name: " << endl;
@@ -32,7 +34,7 @@ int main() {
         cout << "1. See account data" << endl;
         cout << "2. Add new Ledger entry" << endl;
         cout << "3. Quick trial balance" << endl;
-        cout << "q: quit" << endl;
+        cout << "q: Save & Quit" << endl;
 
         cin >> input;
         cin.get();
@@ -94,6 +96,7 @@ int main() {
             }
             for(unsigned i = 0; i < accNames.size(); ++i) {
                 fileReader.getAccount(accNames[i]).addEntry(modifications[i]);
+                fileReader.push_back(modifications[i], accNames[i]);
             }
         } else if(input == "3") {
             double debits = 0, credits = 0;
@@ -109,5 +112,10 @@ int main() {
         }
     }
 
+    PrototypeFileWriter writer(fileReader.getEntries(), fileReader.getNames(), fileReader.getAccounts());
+    ofstream outfile;
+    outfile.open("bin/companydata/" + dirname + "/" + std::to_string(year) + ".ar");
+    writer.writeToFile(outfile);
+    outfile.close();
     return 0;
 }

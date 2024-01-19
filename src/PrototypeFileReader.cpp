@@ -57,6 +57,7 @@ PrototypeFileReader::PrototypeFileReader(ifstream &inputFile, DateUnit year) {
         getline(inputFile, toAdd.description);
         try {
             accountLibrary.find(toAdd.accName)->second.addEntry(LedgerModification(toAdd.amount, toAdd.valueType, Date(toAdd.date), toAdd.description));
+            push_back(LedgerModification(toAdd.amount, toAdd.valueType, Date(toAdd.date), toAdd.description), toAdd.accName);
         } catch(invalid_argument e) {
             continue;
         }
