@@ -15,7 +15,7 @@ using std::string;
 using std::vector;
 
 enum AccountType {
-    Asset, Liability, StockholdersEquity, Revenue, Expense, GAIN, LOSS, ContraAsset, ContraLiability, ContraEquity, ContraRevenue, ContraExpense
+    Asset, Liability, StockholdersEquity, Revenue, Expense, GAIN, LOSS, Dividends, ContraAsset, ContraLiability, ContraEquity, ContraRevenue, ContraExpense
 };
 
 class Account {
@@ -25,13 +25,14 @@ class Account {
         DateUnit year;
         ValueType valueType;
         AccountType accountType;
-        Account(const string& name, ValueType valueType, AccountType accountType, DateUnit year, double beginningBalance = 0) : name(name), valueType(valueType), accountType(accountType), records(year, valueType, beginningBalance) {}
+        Account(const string& name, ValueType valueType, AccountType accountType, DateUnit year, double beginningBalance = 0) : name(name), valueType(valueType), accountType(accountType), year(year), records(year, valueType, beginningBalance) {}
     public:
         const string& getName() const { return name; }
         double getBalance() const { return records.getEndingBalance(); }
         double getBeginningBalance() const { return records.getBeginningBalance(); }
         ValueType getBalanceType() const { return valueType; }
         AccountType getAccountType() const { return accountType; }
+        DateUnit getYear() const { return year; }
         void addEntry(const LedgerModification&);
         const vector<LedgerModification> &getEntries() const { return records.getEntries(); }
         const vector<LedgerModification> &getQuartersEntries(DateUnit quarter) const { return records.getQuarterRecords()[quarter-1].getEntries(); }

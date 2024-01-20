@@ -25,6 +25,7 @@ TEST(AccountTests, testConstructor) {
     EXPECT_EQ(account1.getBeginningBalance(), 1000);
     EXPECT_EQ(account1.getBalanceType(), ValueType::debit);
     EXPECT_EQ(account1.getAccountType(), AccountType::Asset);
+    EXPECT_EQ(account1.getYear(), 2001);
     EXPECT_EQ(account1.getEntries().size(), 0);
     EXPECT_EQ(account1.getQuartersEntries(1).size(), 0);
     EXPECT_EQ(account1.getMonthsEntries(1).size(), 0);
