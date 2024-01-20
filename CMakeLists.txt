@@ -23,5 +23,18 @@ ADD_EXECUTABLE(AccountingProject
     src/QuarterRecords.cpp
     src/YearRecords.cpp
     src/Account.cpp
+    src/AssetAccount.cpp
+    src/LiabilityAccount.cpp
+    src/StockholdersEquityAccount.cpp
+    src/RevenueAccount.cpp
+    src/ExpenseAccount.cpp
+    src/GainAccount.cpp
+    src/LossAccount.cpp
+    src/DividendsAccount.cpp
+    src/ContraAssetAccount.cpp
+    src/ContraLiabilityAccount.cpp
+    src/ContraEquityAccount.cpp
+    src/ContraRevenueAccount.cpp
+    src/ContraExpenseAccount.cpp
 )
 

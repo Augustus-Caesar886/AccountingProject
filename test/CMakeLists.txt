@@ -26,6 +26,32 @@ ADD_EXECUTABLE(AccountingTests
     ../src/YearRecords.cpp
     AccountTests.cpp
     ../src/Account.cpp
+    AssetAccountTests.cpp
+    ../src/AssetAccount.cpp
+    LiabilityAccountTests.cpp
+    ../src/LiabilityAccount.cpp
+    StockholdersEquityTests.cpp
+    ../src/StockholdersEquityAccount.cpp
+    RevenueTests.cpp
+    ../src/RevenueAccount.cpp
+    ExpenseTests.cpp
+    ../src/ExpenseAccount.cpp
+    GainAccountTests.cpp
+    ../src/GainAccount.cpp
+    LossAccountTests.cpp
+    ../src/LossAccount.cpp
+    DividendsTests.cpp
+    ../src/DividendsAccount.cpp
+    ContraAssetTests.cpp
+    ../src/ContraAssetAccount.cpp
+    ContraLiabilityTests.cpp
+    ../src/ContraLiabilityAccount.cpp
+    ContraEquityTests.cpp
+    ../src/ContraEquityAccount.cpp
+    ContraRevenueTests.cpp
+    ../src/ContraRevenueAccount.cpp
+    ContraExpenseTests.cpp
+    ../src/ContraExpenseAccount.cpp
 )
 
 target_link_libraries(AccountingTests gmock gtest gtest_main)
