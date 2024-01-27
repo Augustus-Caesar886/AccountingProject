@@ -24,11 +24,15 @@ class AccountLibrary {
         vector<LossAccount> losses;
         unordered_map<Account*, Account*> contraLinker;
         unordered_map<string, Account*> nameLinker;
+        DateUnit year;
         string toUpper(const string&); 
         bool compareStrings(const string& st1, const string& st2) { return toUpper(st1) == toUpper(st2); }
     public:
-        AccountLibrary();
+        AccountLibrary(DateUnit year) : year(year) {}
+        DateUnit getYear() const { return year; }
         void addAccount(const string&, AccountType, double beginningBalance = 0);
+        void linkAccount(const string&, const string&, double beginningBalance = 0);
+        Account* findLinked(const string&) const;
         void addAlias(const string&, const string&);
         Account& getAccount(const string& alias) { return *(nameLinker.find(alias)->second); }
         const Account& getAccount(const string& alias) const { return *(nameLinker.find(alias)->second); }
