@@ -46,6 +46,9 @@ TEST(AccountLibraryTests, testAddAlias) {
     AccountLibrary accounts(2024);
     accounts.addAccount("Cash", AccountType::Asset, 1000);
     accounts.addAccount("Equipment", AccountType::Asset, 1000);
+
+    std::cout << "Debug for github environment" << std::endl;
+
     EXPECT_TRUE(accounts.addAlias("Cash", "Checking"));
 
     EXPECT_EQ(accounts.getAccount("Cash"), accounts.getAccount("Checking"));
