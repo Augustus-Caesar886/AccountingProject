@@ -22,6 +22,7 @@ jobs:
 
     - name: Validate Build
       run: |
+        cmake --version
         cmake -S .
         make
         ./bin/AccountingTests
