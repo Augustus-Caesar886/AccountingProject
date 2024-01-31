@@ -22,20 +22,20 @@ class AccountLibrary {
         vector<ExpenseAccount> expenses;
         vector<GainAccount> gains;
         vector<LossAccount> losses;
-        unordered_map<Account*, Account*> contraLinker;
+        unordered_map<Account*, Account> contraLinker;
         unordered_map<string, Account*> nameLinker;
         DateUnit year;
-        string toUpper(const string&); 
-        bool compareStrings(const string& st1, const string& st2) { return toUpper(st1) == toUpper(st2); }
+        string toUpper(const string&) const; 
     public:
         AccountLibrary(DateUnit year) : year(year) {}
         DateUnit getYear() const { return year; }
         void addAccount(const string&, AccountType, double beginningBalance = 0);
-        void linkAccount(const string&, const string&, double beginningBalance = 0);
-        Account* findLinked(const string&) const;
-        void addAlias(const string&, const string&);
-        Account& getAccount(const string& alias) { return *(nameLinker.find(alias)->second); }
-        const Account& getAccount(const string& alias) const { return *(nameLinker.find(alias)->second); }
+        void linkAccount(const string&, const string&, AccountType, double beginningBalance = 0);
+        Account* findLinked(const string&);
+        bool addAlias(const string&, const string&);
+        void removeAlias(const string&);
+        Account& getAccount(const string& );
+        const Account& getAccount(const string&) const ;
         const vector<AssetAccount> getAssets() const { return assets; }
         const vector<LiabilityAccount> getLiabilities() const { return liabilities; }
         const vector<StockholdersEquityAccount> getStockholdersEquity() const { return stockholdersEquity; }

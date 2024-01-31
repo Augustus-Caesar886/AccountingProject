@@ -9,6 +9,9 @@ using ::testing::InSequence;
 #include <string>
 using std::string;
 
+#include <stdexcept>
+using std::invalid_argument;
+
 TEST(AccountLibraryTests, testConstructor) {
     AccountLibrary accounts(2024);
 
@@ -42,9 +45,11 @@ TEST(AccountLibraryTests, testAddLiability) {
 TEST(AccountLibraryTests, testAddAlias) {
     AccountLibrary accounts(2024);
     accounts.addAccount("Cash", AccountType::Asset, 1000);
-    accounts.addAlias("Cash", "Checking");
+    accounts.addAccount("Equipment", AccountType::Asset, 1000);
+    EXPECT_TRUE(accounts.addAlias("Cash", "Checking"));
 
     EXPECT_EQ(accounts.getAccount("Cash"), accounts.getAccount("Checking"));
+    EXPECT_FALSE(accounts.addAlias("Equipment", "Checking"));
 }
 
 
@@ -58,6 +63,10 @@ TEST(AccountLibraryTests, testGetAccount) {
     EXPECT_EQ(accounts.getAccount("CASh").getAccountType(), AccountType::Asset);
     EXPECT_EQ(accounts.getAccount("cAsH").getBalance(), 1000);
     EXPECT_EQ(accounts.getAccount("CasH").getBeginningBalance(), 1000);
+
+    EXPECT_THROW({
+        accounts.getAccount("AP");
+    }, invalid_argument);
 }
 
 TEST(AccountLibraryTests, testLinkAccount) {
@@ -67,5 +76,21 @@ TEST(AccountLibraryTests, testLinkAccount) {
     accounts.linkAccount("Equipment", "Accumulated Depreciation", AccountType::ContraAsset, 300);
 
     ASSERT_EQ(accounts.findLinked("Cash"), nullptr);
-    EXPECT_EQ(accounts.findLinked("Equipment")->getName(), "Accumulated Depcreciation");
+    EXPECT_EQ(accounts.findLinked("Equipment")->getName(), "Accumulated Depreciation");
+    EXPECT_EQ(accounts.getAccount("Accumulated Depreciation").getName(), "Accumulated Depreciation");
+}
+
+TEST(AccountLibraryTests, testRemoveAlias) {
+    AccountLibrary accounts(2024);
+    accounts.addAccount("Cash", AccountType::Asset, 1000);
+    accounts.addAlias("Cash", "Checking");
+
+    ASSERT_EQ(accounts.getAccount("Cash"), accounts.getAccount("Checking"));
+    
+    accounts.removeAlias("checking");
+    EXPECT_THROW({
+        accounts.getAccount("checking");
+    }, invalid_argument);
+
+    EXPECT_EQ(accounts.getAccount("Cash"), accounts.getAccount("Cash"));
 }
