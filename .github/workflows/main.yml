@@ -14,10 +14,14 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
+    
+    - name: Install Specific Version of CMake
+      uses: ssrobins/install-cmake@v1
+      with:
+        version: 3.25.0
 
     - name: Validate Build
       run: |
-        set(cmake_version "3.25.0")
         cmake -S .
         make
         ./bin/AccountingTests
