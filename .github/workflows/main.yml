@@ -16,6 +16,8 @@ jobs:
         submodules: recursive
 
     - name: Validate Build
+      with:
+        cmake-version: '3.25.x'
       run: |
         cmake -S .
         make
