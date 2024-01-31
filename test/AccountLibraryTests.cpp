@@ -52,6 +52,12 @@ TEST(AccountLibraryTests, testAddAlias) {
     EXPECT_TRUE(accounts.addAlias("Cash", "Checking"));
     std::cout << "Passed check 1" << std::endl;
 
+    accounts.getAccount("Cash"); 
+    std::cout << "retrieved cash account" << std::endl;
+    accounts.getAccount("Checking");
+    std::cout << "retrieved checking account" << std::endl;
+
+
     EXPECT_EQ(accounts.getAccount("Cash"), accounts.getAccount("Checking"));
     std::cout << "Passed check 2" << std::endl;
 
