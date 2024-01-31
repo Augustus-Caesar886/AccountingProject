@@ -16,9 +16,8 @@ jobs:
         submodules: recursive
 
     - name: Validate Build
-      with:
-        cmake-version: '3.25.x'
       run: |
+        set(cmake_version "3.25.0")
         cmake -S .
         make
         ./bin/AccountingTests
