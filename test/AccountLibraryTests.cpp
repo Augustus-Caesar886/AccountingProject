@@ -50,9 +50,13 @@ TEST(AccountLibraryTests, testAddAlias) {
     std::cout << "Debug for github environment" << std::endl;
 
     EXPECT_TRUE(accounts.addAlias("Cash", "Checking"));
+    std::cout << "Passed check 1" << std::endl;
 
     EXPECT_EQ(accounts.getAccount("Cash"), accounts.getAccount("Checking"));
+    std::cout << "Passed check 2" << std::endl;
+
     EXPECT_FALSE(accounts.addAlias("Equipment", "Checking"));
+    std::cout << "Passed check 3, indicates no segfault in tests" << std::endl;
 }
 
 
