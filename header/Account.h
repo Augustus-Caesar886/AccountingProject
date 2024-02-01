@@ -37,6 +37,8 @@ class Account {
         const vector<LedgerModification> &getEntries() const { return records.getEntries(); }
         const vector<LedgerModification> &getQuartersEntries(DateUnit quarter) const { return records.getQuarterRecords()[quarter-1].getEntries(); }
         const vector<LedgerModification> &getMonthsEntries(DateUnit month) const { return records.getQuarterRecords()[(month-1) / 3].getMonthRecords()[(month-1) % 3].getEntries(); }
+
+        bool operator==(const Account&) const;
 };
 
 #endif
