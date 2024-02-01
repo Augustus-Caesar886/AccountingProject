@@ -52,9 +52,9 @@ TEST(AccountLibraryTests, testAddAlias) {
     ASSERT_TRUE(accounts.addAlias("Cash", "Checking"));
     std::cout << "Passed check 1" << std::endl;
 
-    accounts.getAccount("Cash"); 
+    accounts.getAccount("Cash").getName(); 
     std::cout << "retrieved cash account" << std::endl;
-    accounts.getAccount("Checking");
+    accounts.getAccount("Checking").getName();
     std::cout << "retrieved checking account" << std::endl;
 
 
