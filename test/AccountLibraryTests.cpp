@@ -49,7 +49,7 @@ TEST(AccountLibraryTests, testAddAlias) {
 
     std::cout << "Debug for github environment" << std::endl;
 
-    EXPECT_TRUE(accounts.addAlias("Cash", "Checking"));
+    ASSERT_TRUE(accounts.addAlias("Cash", "Checking"));
     std::cout << "Passed check 1" << std::endl;
 
     accounts.getAccount("Cash"); 
