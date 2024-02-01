@@ -18,35 +18,35 @@ void AccountLibrary::addAccount(const string& name, AccountType accountType, dou
     switch(accountType) {
         case AccountType::Asset:
             assets.push_back(AssetAccount(name, year, beginningBalance));
-            nameLinker.emplace(toUpper(name), &assets[assets.size()-1]);
+            nameLinker.emplace(toUpper(name), &assets.back());
             break;
         case AccountType::Liability:
             liabilities.push_back(LiabilityAccount(name, year, beginningBalance));
-            nameLinker.emplace(toUpper(name), &liabilities[liabilities.size()-1]);
+            nameLinker.emplace(toUpper(name), &liabilities.back());
             break;
         case AccountType::StockholdersEquity:
             stockholdersEquity.push_back(StockholdersEquityAccount(name, year, beginningBalance));
-            nameLinker.emplace(toUpper(name), &stockholdersEquity[stockholdersEquity.size()-1]);
+            nameLinker.emplace(toUpper(name), &stockholdersEquity.back());
             break;
         case AccountType::ContraEquity:
             lessEquity.push_back(ContraEquityAccount(name, year, beginningBalance));
-            nameLinker.emplace(toUpper(name), &lessEquity[lessEquity.size()-1]);
+            nameLinker.emplace(toUpper(name), &lessEquity.back());
             break;
         case AccountType::Revenue:
             revenues.push_back(RevenueAccount(name, year, beginningBalance));
-            nameLinker.emplace(toUpper(name), &revenues[revenues.size()-1]);
+            nameLinker.emplace(toUpper(name), &revenues.back());
             break;
         case AccountType::Expense:
             expenses.push_back(ExpenseAccount(name, year, beginningBalance));
-            nameLinker.emplace(toUpper(name), &expenses[expenses.size()-1]);
+            nameLinker.emplace(toUpper(name), &expenses.back());
             break;
         case AccountType::GAIN:
             gains.push_back(GainAccount(name, year, beginningBalance));
-            nameLinker.emplace(toUpper(name), &gains[gains.size()-1]);
+            nameLinker.emplace(toUpper(name), &gains.back());
             break;
         case AccountType::LOSS:
             losses.push_back(LossAccount(name, year, beginningBalance));
-            nameLinker.emplace(toUpper(name), &losses[losses.size()-1]);
+            nameLinker.emplace(toUpper(name), &losses.back());
             break;
         default:
             break;

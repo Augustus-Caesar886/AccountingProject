@@ -28,6 +28,24 @@ TEST(AccountLibraryTests, testAddAsset) {
     EXPECT_EQ(accounts.getAccount("Cash").getAccountType(), AccountType::Asset);
     EXPECT_EQ(accounts.getAccount("Cash").getBalance(), 1000);
     EXPECT_EQ(accounts.getAccount("Cash").getBeginningBalance(), 1000);
+
+    accounts.addAccount("Equipment", AccountType::Asset, 1000);
+
+    EXPECT_EQ(accounts.getAccount("Equipment").getName(), "Equipment");
+    EXPECT_EQ(accounts.getAccount("Equipment").getYear(), 2024);
+    EXPECT_EQ(accounts.getAccount("Equipment").getBalanceType(), ValueType::debit);
+    EXPECT_EQ(accounts.getAccount("Equipment").getAccountType(), AccountType::Asset);
+    EXPECT_EQ(accounts.getAccount("Equipment").getBalance(), 1000);
+    EXPECT_EQ(accounts.getAccount("Equipment").getBeginningBalance(), 1000);
+
+    EXPECT_EQ(accounts.getAccount("Cash").getName(), "Cash");
+    EXPECT_EQ(accounts.getAccount("Cash").getYear(), 2024);
+    EXPECT_EQ(accounts.getAccount("Cash").getBalanceType(), ValueType::debit);
+    EXPECT_EQ(accounts.getAccount("Cash").getAccountType(), AccountType::Asset);
+    EXPECT_EQ(accounts.getAccount("Cash").getBalance(), 1000);
+    EXPECT_EQ(accounts.getAccount("Cash").getBeginningBalance(), 1000);
+
+    EXPECT_EQ(accounts.getAssets().size(), 2);
 }
 
 TEST(AccountLibraryTests, testAddLiability) {
@@ -47,20 +65,11 @@ TEST(AccountLibraryTests, testAddAlias) {
     accounts.addAccount("Cash", AccountType::Asset, 1000);
     accounts.addAccount("Equipment", AccountType::Asset, 1000);
 
-    std::cout << "Debug for github environment" << std::endl;
-
     ASSERT_TRUE(accounts.addAlias("Cash", "Checking"));
-    std::cout << "Passed check 1" << std::endl;
-
-    std::cout << "retrieved cash account: " << accounts.getAccount("Cash").getName() << std::endl;
-    std::cout << "retrieved checking account: " << accounts.getAccount("Checking").getName() << std::endl;
-
 
     EXPECT_EQ(accounts.getAccount("Cash"), accounts.getAccount("Checking"));
-    std::cout << "Passed check 2" << std::endl;
 
     EXPECT_FALSE(accounts.addAlias("Equipment", "Checking"));
-    std::cout << "Passed check 3, indicates no segfault in tests" << std::endl;
 }
 
 
