@@ -52,13 +52,11 @@ TEST(AccountLibraryTests, testAddAlias) {
     ASSERT_TRUE(accounts.addAlias("Cash", "Checking"));
     std::cout << "Passed check 1" << std::endl;
 
-    accounts.getAccount("Cash").getName(); 
-    std::cout << "retrieved cash account" << std::endl;
-    accounts.getAccount("Checking").getName();
-    std::cout << "retrieved checking account" << std::endl;
+    std::cout << "retrieved cash account: " << accounts.getAccount("Cash").getName() << std::endl;
+    std::cout << "retrieved checking account: " << accounts.getAccount("Checking").getName() << std::endl;
 
 
-    EXPECT_TRUE(accounts.getAccount("Cash") == accounts.getAccount("Checking"));
+    EXPECT_EQ(accounts.getAccount("Cash"), accounts.getAccount("Checking"));
     std::cout << "Passed check 2" << std::endl;
 
     EXPECT_FALSE(accounts.addAlias("Equipment", "Checking"));
