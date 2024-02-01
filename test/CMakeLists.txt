@@ -54,6 +54,8 @@ ADD_EXECUTABLE(AccountingTests
     ../src/ContraExpenseAccount.cpp
     AccountLibraryTests.cpp
     ../src/AccountLibrary.cpp
+    JournalEntryTests.cpp
+    ../src/JournalEntry.cpp
 )
 
 target_link_libraries(AccountingTests gmock gtest gtest_main)
