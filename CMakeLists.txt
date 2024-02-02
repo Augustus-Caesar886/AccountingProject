@@ -37,5 +37,6 @@ ADD_EXECUTABLE(AccountingProject
     src/ContraRevenueAccount.cpp
     src/ContraExpenseAccount.cpp
     src/AccountLibrary.cpp
+    src/JournalEntry.cpp
 )
 
