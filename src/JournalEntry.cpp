@@ -4,6 +4,7 @@ using std::invalid_argument;
 
 void JournalEntry::addModification(const JournalModification& modification) {
     if(modification.getDate() != day) throw invalid_argument("Modification dated " + modification.getDate().stringForm() + " not compatible with entry dated " + day.stringForm());
+    if(modification.getDescription() != description) throw invalid_argument("Description of \"" + modification.getDescription() + "\" does not match with expected description of \"" + description + "\"");
 
     if(lastEntryType == ValueType::credit and modification.get().second != ValueType::credit) throw invalid_argument("Attempting to add debit (or invalid) modification after credit modification(s) entered");
     accountsModified.push_back(modification);
