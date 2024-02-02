@@ -12,14 +12,14 @@ using ::testing::InSequence;
 using std::invalid_argument;
 
 TEST(JournalEntryTests, testConstructor) {
-    JournalEntry entry(Date("01/01/2024"));
+    JournalEntry entry(Date("01/01/2024"), "test");
 
     EXPECT_TRUE(entry.validate());
     EXPECT_EQ(entry.getModifications().size(), 0);
 }
 
 TEST(JournalEntryTests, testAddModification) {
-    JournalEntry entry(Date("01/01/2024"));
+    JournalEntry entry(Date("01/01/2024"), "Collect $500 from Accounts Receivable");
     AssetAccount cash("Cash", 2024, 1000);
     AssetAccount accountsReceivable("Accounts Receivable", 2024, 500);
 
@@ -35,7 +35,7 @@ TEST(JournalEntryTests, testAddModification) {
 }
 
 TEST(JournalEntryTests, testAddModificationThrow) {
-    JournalEntry entry(Date("01/01/2024"));
+    JournalEntry entry(Date("01/01/2024"), "Collect $500 from Accounts Receivable");
     AssetAccount cash("Cash", 2024, 1000);
     AssetAccount accountsReceivable("Accounts Receivable", 2024, 500);
 
@@ -48,5 +48,9 @@ TEST(JournalEntryTests, testAddModificationThrow) {
 
     EXPECT_THROW({
         entry.addModification(JournalModification(500, ValueType::debit, Date("01/01/2024"), "Collect $500 from Accounts Receivable", &accountsReceivable));
+    }, invalid_argument);
+
+    EXPECT_THROW({
+        entry.addModification(JournalModification(500, ValueType::credit, Date("01/01/2024"), "Collect $500 from Accounts Payable", &accountsReceivable));
     }, invalid_argument);
 }
