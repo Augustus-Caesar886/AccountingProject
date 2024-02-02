@@ -11,8 +11,9 @@ class JournalEntry {
     private:
         vector<JournalModification> accountsModified;
         Date day;
+        ValueType lastEntryType;
     public:
-        JournalEntry(const Date &day) : day(day) {}
+        JournalEntry(const Date &day) : day(day), lastEntryType(ValueType::debit) {}
         void addModification(const JournalModification&);
         bool validate() const;
         const vector<JournalModification> &getModifications() const { return accountsModified; }
