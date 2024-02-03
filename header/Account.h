@@ -1,12 +1,10 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
-
-
 #include "YearRecords.h"
 #include "ValueType.h"
 #include "Date.h"
-#include "LedgerModification.h"
+#include "JournalModification.h"
 
 #include <string>
 using std::string;
@@ -33,10 +31,10 @@ class Account {
         ValueType getBalanceType() const { return valueType; }
         AccountType getAccountType() const { return accountType; }
         DateUnit getYear() const { return year; }
-        void addEntry(const LedgerModification&);
-        const vector<LedgerModification> &getEntries() const { return records.getEntries(); }
-        const vector<LedgerModification> &getQuartersEntries(DateUnit quarter) const { return records.getQuarterRecords()[quarter-1].getEntries(); }
-        const vector<LedgerModification> &getMonthsEntries(DateUnit month) const { return records.getQuarterRecords()[(month-1) / 3].getMonthRecords()[(month-1) % 3].getEntries(); }
+        void addEntry(JournalModification*);
+        const vector<JournalModification*> &getEntries() const { return records.getEntries(); }
+        const vector<JournalModification*> &getQuartersEntries(DateUnit quarter) const { return records.getQuarterRecords()[quarter-1].getEntries(); }
+        const vector<JournalModification*> &getMonthsEntries(DateUnit month) const { return records.getQuarterRecords()[(month-1) / 3].getMonthRecords()[(month-1) % 3].getEntries(); }
 
         bool operator==(const Account&) const;
 };

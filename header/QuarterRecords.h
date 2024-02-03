@@ -12,12 +12,12 @@ class QuarterRecords : public AccountRecords {
     private:
         DateUnit quarter;
         vector<MonthRecords> months;
-        vector<LedgerModification> quarterRecords;
+        vector<JournalModification*> quarterRecords;
     public:
         QuarterRecords(DateUnit year, DateUnit quarter, ValueType valueType, double beginningBalance);
         DateUnit getQuarter() const { return quarter; }
-        void addEntry(const LedgerModification&);
-        const vector<LedgerModification> &getEntries() const { return quarterRecords; }
+        void addEntry(JournalModification*);
+        const vector<JournalModification*> &getEntries() const { return quarterRecords; }
         const vector<MonthRecords> &getMonthRecords() const { return months; }
         void adjustPeriodBalances(double newValue); //Sets beginningBalance and endingBalance, only to be used on QuarterRecords objects with no entries
 };

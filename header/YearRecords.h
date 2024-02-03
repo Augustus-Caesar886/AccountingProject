@@ -3,18 +3,18 @@
 
 #include "AccountRecords.h"
 #include "QuarterRecords.h"
-#include "LedgerModification.h"
+#include "JournalModification.h"
 #include "Date.h"
 
 class YearRecords : public AccountRecords {
     private:
         vector<QuarterRecords> quarters;
-        vector<LedgerModification> entries;
+        vector<JournalModification*> entries;
     public:
         YearRecords(DateUnit, ValueType, double);
-        void addEntry(const LedgerModification&);
+        void addEntry(JournalModification*);
         const vector<QuarterRecords> &getQuarterRecords() const { return quarters; }
-        const vector<LedgerModification> &getEntries() const { return entries; }
+        const vector<JournalModification*> &getEntries() const { return entries; }
 };
 
 #endif

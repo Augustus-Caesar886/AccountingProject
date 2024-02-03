@@ -7,6 +7,7 @@ using ::testing::InSequence;
 #include "../header/AccountRecords.h"
 #include "../header/LedgerModification.h"
 #include "../header/Date.h"
+#include "../header/AssetAccount.h"
 
 #include <vector>
 using std::vector;
@@ -16,11 +17,11 @@ using std::invalid_argument;
 
 class AccountRecordsTestDriver : public AccountRecords {
     private:
-        vector<LedgerModification> modifications;
+        vector<JournalModification*> modifications;
     public:
         AccountRecordsTestDriver(DateUnit year, ValueType vt, double amt) : AccountRecords(year, vt, amt) {}
 
-        const vector<LedgerModification>& getEntries() const { return modifications; }
+        const vector<JournalModification*>& getEntries() const { return modifications; }
 };
 
 TEST(AccountRecordsTests, testConstructor) {
@@ -34,8 +35,9 @@ TEST(AccountRecordsTests, testConstructor) {
 
 TEST(AccountRecordsTests, testAddEntry) {
     AccountRecordsTestDriver exampleMonth(2000, ValueType::debit, 1000); //Ex. start with 1000 cash in a debit account
-    
-    exampleMonth.addEntry(LedgerModification(100, ValueType::credit, Date("01/02/2000"), "Pay with $100 cash"));
+    AssetAccount cash("Cash", 2000, 1000);
+    JournalModification modification = JournalModification(100, ValueType::credit, Date("01/02/2000"), "Pay with $100 cash", &cash);
+    exampleMonth.addEntry(&modification);
 
     EXPECT_EQ(exampleMonth.getBeginningBalance(), 1000);
     EXPECT_EQ(exampleMonth.getEndingBalance(), 900);
@@ -44,9 +46,11 @@ TEST(AccountRecordsTests, testAddEntry) {
 
 TEST(AccountRecordsTests, testThrowBadYear) {
     AccountRecordsTestDriver exampleMonth(2000, ValueType::debit, 1000); //Ex. start with 1000 cash in a debit account
-    
+    AssetAccount cash("Cash", 2000, 1000);
+    JournalModification modification = JournalModification(100, ValueType::credit, Date("01/02/2001"), "Pay with $100 cash", &cash);
+
     EXPECT_THROW({
-        exampleMonth.addEntry(LedgerModification(100, ValueType::credit, Date("01/02/2001"), "Pay with $100 cash"));
+        exampleMonth.addEntry(&modification);
     }, invalid_argument);
 
     EXPECT_EQ(exampleMonth.getYear(), 2000);

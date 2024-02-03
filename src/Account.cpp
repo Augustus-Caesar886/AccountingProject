@@ -1,6 +1,6 @@
 #include "../header/Account.h"
 
-void Account::addEntry(const LedgerModification& entry) {
+void Account::addEntry(JournalModification* entry) {
     records.addEntry(entry);
 }
 

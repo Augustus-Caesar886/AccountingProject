@@ -13,27 +13,27 @@ QuarterRecords::QuarterRecords(DateUnit year, DateUnit quarter, ValueType valueT
     }
 }
 
-void QuarterRecords::addEntry(const LedgerModification& entry) {
-    if(entry.getDate().month < (quarter - 1) * 3 + 1 or entry.getDate().month > quarter * 3) throw invalid_argument("Invalid month for Quarter " + to_string(quarter));
-    for(unsigned i = entry.getDate().month - 3 * (quarter-1); i < 3; ++i) {
-        if(months[i].getEntries().size() != 0) throw invalid_argument("Entry dated " + entry.getDate().stringForm() + " is invalid for quarter " + to_string(quarter));
+void QuarterRecords::addEntry(JournalModification* entry) {
+    if(entry->getDate().month < (quarter - 1) * 3 + 1 or entry->getDate().month > quarter * 3) throw invalid_argument("Invalid month for Quarter " + to_string(quarter));
+    for(unsigned i = entry->getDate().month - 3 * (quarter-1); i < 3; ++i) {
+        if(months[i].getEntries().size() != 0) throw invalid_argument("Entry dated " + entry->getDate().stringForm() + " is invalid for quarter " + to_string(quarter));
     }
 
     AccountRecords::addEntry(entry);
-    if(entry.getDate().month - 3 * (quarter-1) - 1 != 0 and months[entry.getDate().month - 3 * (quarter-1) - 1].getEntries().size() == 0) { //Adjust past records
-        if(entry.getDate().month - 3 * (quarter-1) - 2 != 0 and months[entry.getDate().month - 3 * (quarter-1) - 2].getEntries().size() == 0) {
-            months[entry.getDate().month - 3 * (quarter-1) - 2].setBeginningBalance(months[0].getEndingBalance());
-            months[entry.getDate().month - 3 * (quarter-1) - 2].setEndingBalance(months[0].getEndingBalance());
+    if(entry->getDate().month - 3 * (quarter-1) - 1 != 0 and months[entry->getDate().month - 3 * (quarter-1) - 1].getEntries().size() == 0) { //Adjust past records
+        if(entry->getDate().month - 3 * (quarter-1) - 2 != 0 and months[entry->getDate().month - 3 * (quarter-1) - 2].getEntries().size() == 0) {
+            months[entry->getDate().month - 3 * (quarter-1) - 2].setBeginningBalance(months[0].getEndingBalance());
+            months[entry->getDate().month - 3 * (quarter-1) - 2].setEndingBalance(months[0].getEndingBalance());
         }
-        months[entry.getDate().month - 3 * (quarter-1) - 1].setBeginningBalance(months[entry.getDate().month - 3 * (quarter-1) - 2].getEndingBalance());
-        months[entry.getDate().month - 3 * (quarter-1) - 1].setEndingBalance(months[entry.getDate().month - 3 * (quarter-1) - 2].getEndingBalance());
+        months[entry->getDate().month - 3 * (quarter-1) - 1].setBeginningBalance(months[entry->getDate().month - 3 * (quarter-1) - 2].getEndingBalance());
+        months[entry->getDate().month - 3 * (quarter-1) - 1].setEndingBalance(months[entry->getDate().month - 3 * (quarter-1) - 2].getEndingBalance());
     }
-    months[entry.getDate().month - 3 * (quarter-1) - 1].addEntry(entry);
+    months[entry->getDate().month - 3 * (quarter-1) - 1].addEntry(entry);
     quarterRecords.push_back(entry);
 
-    for(unsigned i = entry.getDate().month - 3 * (quarter-1); i < 3; ++i) { //Prepare future records
-        months[i].setBeginningBalance(months[entry.getDate().month - 3 * (quarter-1) - 1].getEndingBalance());
-        months[i].setEndingBalance(months[entry.getDate().month - 3 * (quarter-1) - 1].getEndingBalance());
+    for(unsigned i = entry->getDate().month - 3 * (quarter-1); i < 3; ++i) { //Prepare future records
+        months[i].setBeginningBalance(months[entry->getDate().month - 3 * (quarter-1) - 1].getEndingBalance());
+        months[i].setEndingBalance(months[entry->getDate().month - 3 * (quarter-1) - 1].getEndingBalance());
     }
 }
 

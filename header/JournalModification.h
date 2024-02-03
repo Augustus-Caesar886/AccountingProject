@@ -2,7 +2,8 @@
 #define JOURNAL_MODIFICATION_H
 
 #include "AccountModification.h"
-#include "Account.h"
+
+class Account; //Forward declaration of Account
 
 class JournalModification : public AccountModification {
     private:
