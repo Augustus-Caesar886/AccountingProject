@@ -19,6 +19,8 @@ TEST(JournalEntryPosterTests, testJournalPoster) {
     accounts.addAccount("Notes Payable", AccountType::Liability, 0);
     accounts.addAlias("Notes Payable", "NP");
     accounts.addAccount("Depreciation Expense", AccountType::Expense, 0);
+    accounts.addAccount("Retained Earnings", AccountType::StockholdersEquity, 0);
+    accounts.addAlias("Retained Earnings", "RE");
 
     JournalEntry entry1(Date("01/01/2024"), "Receive $3000 worth of equipment");
     entry1.addModification(JournalModification(3000, ValueType::debit, entry1.getDate(), entry1.getDescription(), &accounts.getAccount("Equipment")));
@@ -70,9 +72,9 @@ TEST(JournalEntryPosterTests, testJournalPoster) {
     EXPECT_FALSE(entryPoster.postModification(entry3));
     EXPECT_EQ(journal.getEntries().size(), 2);
     EXPECT_EQ(accounts.getAccount("depreciation expense").getEntries().size(), 1);
-    EXPECT_EQ(accounts.getAccount("depreciation expense").getBalance(), 1);
+    EXPECT_EQ(accounts.getAccount("depreciation expense").getBalance(), 150);
 
-    entry3.addModification(JournalModification(150, ValueType::credit, entry3.getDate(), entry3.getDescription(), &accounts.getAccount("adoe")));
+    entry3.addModification(JournalModification(450, ValueType::credit, entry3.getDate(), entry3.getDescription(), &accounts.getAccount("adoe")));
     EXPECT_TRUE(entryPoster.postModification(entry3));
     EXPECT_EQ(journal.getEntries().size(), 3);
     EXPECT_EQ(accounts.getAccount("depreciation expense").getEntries().size(), 2);
@@ -80,6 +82,10 @@ TEST(JournalEntryPosterTests, testJournalPoster) {
     EXPECT_EQ(accounts.getAccount("Accumulated Depreciation on Equipment").getEntries().size(), 2);
     EXPECT_EQ(accounts.getAccount("Accumulated Depreciation on Equipment").getBalance(), 600);
 
-    JournalEntry cje(Date("12/31/2024"), "Record $450 of Accumulated Depreciation on Equipment");
-    cje.addModification(JournalModification(150, ValueType::credit, entry3.getDate(), entry3.getDescription(), &accounts.getAccount("adoe")));
+    JournalEntry cje(Date("12/31/2024"), "CJE");
+    cje.addModification(JournalModification(600, ValueType::debit, cje.getDate(), cje.getDescription(), &accounts.getAccount("RE")));
+    cje.addModification(JournalModification(600, ValueType::credit, cje.getDate(), cje.getDescription(), &accounts.getAccount("depreciation expense")));
+    EXPECT_TRUE(entryPoster.postModification(cje));
+
+    EXPECT_EQ(accounts.getAccount("depreciation expense").getBalance(), 0);
 }
