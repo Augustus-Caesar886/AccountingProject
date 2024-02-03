@@ -30,7 +30,7 @@ TEST(JournalTests, testAddEntry) {
 
     EXPECT_TRUE(journal.journalize(entry));
     ASSERT_EQ(journal.getEntries().size(), 1);
-    ASSERT_EQ(journal.getEntries()[0].getModifications().size(), 2);
-    EXPECT_EQ(journal.getEntries()[0].getModifications()[0].getAffectedAccount()->getName(), "Cash");
-    EXPECT_EQ(journal.getEntries()[0].getModifications()[1].getAffectedAccount()->getName(), "Accounts Receivable");
+    ASSERT_EQ(journal.getEntries().front().getModifications().size(), 2);
+    EXPECT_EQ(journal.getEntries().front().getModifications()[0].getAffectedAccount()->getName(), "Cash");
+    EXPECT_EQ(journal.getEntries().front().getModifications()[1].getAffectedAccount()->getName(), "Accounts Receivable");
 }
