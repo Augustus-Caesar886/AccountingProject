@@ -3,7 +3,7 @@
 
 #include "Date.h"
 #include "ValueType.h"
-#include "LedgerModification.h"
+#include "JournalModification.h"
 
 #include <vector>
 using std::vector;
@@ -21,8 +21,8 @@ class AccountRecords {
         void setBeginningBalance(double bb) { beginningBalance = bb; }
         void setEndingBalance(double eb) { endingBalance = eb; }
         DateUnit getYear() const { return year; }
-        virtual void addEntry(const LedgerModification&);
-        virtual const vector<LedgerModification>& getEntries() const = 0;
+        virtual void addEntry(JournalModification*);
+        virtual const vector<JournalModification*>& getEntries() const = 0;
 };
 
 #endif

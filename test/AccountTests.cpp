@@ -49,11 +49,11 @@ TEST(AccountTests, testAddEntry) {
     AccountTestsDriver revenue("Sales Revenue", ValueType::credit, AccountType::Revenue, 2001); //Start 2001 with $0 in revenue
 
     string transaction1description = "Pay off $100 of Accounts Payable";
-    LedgerModification APModification1(100, ValueType::debit, Date("01/01/2001"), transaction1description);
-    LedgerModification cashModification1(100, ValueType::credit, Date("01/01/2001"), transaction1description);
+    JournalModification APModification1(100, ValueType::debit, Date("01/01/2001"), transaction1description, &ap);
+    JournalModification cashModification1(100, ValueType::credit, Date("01/01/2001"), transaction1description, &cash);
 
-    ap.addEntry(APModification1);
-    cash.addEntry(cashModification1);
+    ap.addEntry(&APModification1);
+    cash.addEntry(&cashModification1);
 
     EXPECT_EQ(cash.getBalance(), 900);
     EXPECT_EQ(ap.getBalance(), 0);
@@ -61,11 +61,11 @@ TEST(AccountTests, testAddEntry) {
     EXPECT_EQ(ap.getBeginningBalance(), 100);
     
     string transaction2description = "Receive $500 worth of supplies";
-    LedgerModification suppliesModification1(500, ValueType::debit, Date("02/01/2001"), transaction2description);
-    LedgerModification APModification2(500, ValueType::credit, Date("02/01/2001"), transaction2description);
+    JournalModification suppliesModification1(500, ValueType::debit, Date("02/01/2001"), transaction2description, &supplies);
+    JournalModification APModification2(500, ValueType::credit, Date("02/01/2001"), transaction2description, &ap);
 
-    supplies.addEntry(suppliesModification1);
-    ap.addEntry(APModification2);
+    supplies.addEntry(&suppliesModification1);
+    ap.addEntry(&APModification2);
 
     EXPECT_EQ(supplies.getBalance(), 700);
     EXPECT_EQ(ap.getBalance(), 500);
@@ -73,11 +73,11 @@ TEST(AccountTests, testAddEntry) {
     EXPECT_EQ(ap.getBeginningBalance(), 100);
 
     string transaction3description = "Earn $300 from sales";
-    LedgerModification cashModification2(300, ValueType::debit, Date("03/01/2001"), transaction3description);
-    LedgerModification revenueModification1(300, ValueType::credit, Date("03/01/2001"), transaction3description);
+    JournalModification cashModification2(300, ValueType::debit, Date("03/01/2001"), transaction3description, &cash);
+    JournalModification revenueModification1(300, ValueType::credit, Date("03/01/2001"), transaction3description, &revenue);
 
-    cash.addEntry(cashModification2);
-    revenue.addEntry(revenueModification1);
+    cash.addEntry(&cashModification2);
+    revenue.addEntry(&revenueModification1);
 
     EXPECT_EQ(cash.getBalance(), 1200);
     EXPECT_EQ(revenue.getBalance(), 300);
@@ -87,11 +87,11 @@ TEST(AccountTests, testAddEntry) {
     AccountTestsDriver suppliesExpense("Supplies Expense", ValueType::debit, AccountType::Expense, 2001); //Start 2001 with $0 supplies expense
 
     string transaction4description = "Record $50 of supplies expense";
-    LedgerModification expenseModification1(50, ValueType::debit, Date("04/01/2001"), transaction4description);
-    LedgerModification suppliesModification2(50, ValueType::credit, Date("04/01/2001"), transaction4description);
+    JournalModification expenseModification1(50, ValueType::debit, Date("04/01/2001"), transaction4description, &suppliesExpense);
+    JournalModification suppliesModification2(50, ValueType::credit, Date("04/01/2001"), transaction4description, &supplies);
 
-    suppliesExpense.addEntry(expenseModification1);
-    supplies.addEntry(suppliesModification2);
+    suppliesExpense.addEntry(&expenseModification1);
+    supplies.addEntry(&suppliesModification2);
 
     EXPECT_EQ(suppliesExpense.getBalance(), 50);
     EXPECT_EQ(supplies.getBalance(), 650);
@@ -155,6 +155,7 @@ TEST(AccountTests, testThrow) {
     AccountTestsDriver account("Cash", ValueType::debit, AccountType::Asset, 2001, 1000);
 
     EXPECT_THROW({
-        account.addEntry(LedgerModification(100, ValueType::debit, Date("01/01/2000"), ""));
+        JournalModification test(100, ValueType::debit, Date("01/01/2000"), "", &account);
+        account.addEntry(&test);
     }, invalid_argument);
 }

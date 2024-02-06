@@ -58,6 +58,8 @@ ADD_EXECUTABLE(AccountingTests
     ../src/JournalEntry.cpp
     JournalTests.cpp
     ../src/Journal.cpp
+    JournalEntryPosterTests.cpp
+    ../src/JournalEntryPoster.cpp
 )
 
 target_link_libraries(AccountingTests gmock gtest gtest_main)

@@ -5,6 +5,7 @@ using ::testing::_;
 using ::testing::InSequence;
 
 #include "../header/QuarterRecords.h"
+#include "../header/AssetAccount.h"
 
 #include <stdexcept>
 using std::invalid_argument;
@@ -64,51 +65,52 @@ TEST(QuarterRecordsTests, testConstructorThrow) {
 
 TEST(QuarterRecordsTests, testAddEntry) {
     QuarterRecords q3(2001, 3, ValueType::debit, 1000); //Start Q3 with $1000 cash
-    LedgerModification modification1 = LedgerModification(100, ValueType::credit, Date("07/17/2001"), "Pay with $100 cash");
-    q3.addEntry(modification1);
+    AssetAccount cash = AssetAccount("Cash", 2001, 1000);
+    JournalModification modification1 = JournalModification(100, ValueType::credit, Date("07/17/2001"), "Pay with $100 cash", &cash);
+    q3.addEntry(&modification1);
 
     EXPECT_EQ(q3.getBeginningBalance(), 1000);
     EXPECT_EQ(q3.getEndingBalance(), 900);
     ASSERT_EQ(q3.getMonthRecords()[0].getEntries().size(), 1);
-    EXPECT_EQ(q3.getMonthRecords()[0].getEntries()[0], modification1);
-    EXPECT_EQ(q3.getEntries()[0], modification1);
+    EXPECT_EQ(q3.getMonthRecords()[0].getEntries()[0], &modification1);
+    EXPECT_EQ(q3.getEntries()[0], &modification1);
     EXPECT_EQ(q3.getMonthRecords()[1].getEntries().size(), 0);
     EXPECT_EQ(q3.getMonthRecords()[2].getEntries().size(), 0);
 
-    LedgerModification modification2 = LedgerModification(100, ValueType::debit, Date("08/17/2001"), "Earn $100 cash");
-    q3.addEntry(modification2);
+    JournalModification modification2 = JournalModification(100, ValueType::debit, Date("08/17/2001"), "Earn $100 cash", &cash);
+    q3.addEntry(&modification2);
 
     EXPECT_EQ(q3.getBeginningBalance(), 1000);
     EXPECT_EQ(q3.getEndingBalance(), 1000);
     EXPECT_EQ(q3.getMonthRecords()[0].getEndingBalance(), 900);
     EXPECT_EQ(q3.getMonthRecords()[1].getBeginningBalance(), 900);
     ASSERT_EQ(q3.getMonthRecords()[0].getEntries().size(), 1);
-    EXPECT_EQ(q3.getMonthRecords()[0].getEntries()[0], modification1);
-    EXPECT_EQ(q3.getEntries()[0], modification1);
+    EXPECT_EQ(q3.getMonthRecords()[0].getEntries()[0], &modification1);
+    EXPECT_EQ(q3.getEntries()[0], &modification1);
     ASSERT_EQ(q3.getMonthRecords()[1].getEntries().size(), 1);
-    EXPECT_EQ(q3.getEntries()[1], modification2);
+    EXPECT_EQ(q3.getEntries()[1], &modification2);
     EXPECT_EQ(q3.getMonthRecords()[2].getEntries().size(), 0);
-    EXPECT_EQ(q3.getMonthRecords()[1].getEntries()[0], modification2);
+    EXPECT_EQ(q3.getMonthRecords()[1].getEntries()[0], &modification2);
 
-    LedgerModification modification3 = LedgerModification(200, ValueType::debit, Date("08/17/2001"), "Earn $200 cash");
-    q3.addEntry(modification3);
+    JournalModification modification3 = JournalModification(200, ValueType::debit, Date("08/17/2001"), "Earn $200 cash", &cash);
+    q3.addEntry(&modification3);
 
     EXPECT_EQ(q3.getBeginningBalance(), 1000);
     EXPECT_EQ(q3.getEndingBalance(), 1200);
     EXPECT_EQ(q3.getMonthRecords()[0].getEndingBalance(), 900);
     EXPECT_EQ(q3.getMonthRecords()[1].getBeginningBalance(), 900);
     ASSERT_EQ(q3.getMonthRecords()[0].getEntries().size(), 1);
-    EXPECT_EQ(q3.getMonthRecords()[0].getEntries()[0], modification1);
-    EXPECT_EQ(q3.getEntries()[0], modification1);
+    EXPECT_EQ(q3.getMonthRecords()[0].getEntries()[0], &modification1);
+    EXPECT_EQ(q3.getEntries()[0], &modification1);
     ASSERT_EQ(q3.getMonthRecords()[1].getEntries().size(), 2);
     EXPECT_EQ(q3.getMonthRecords()[2].getEntries().size(), 0);
-    EXPECT_EQ(q3.getMonthRecords()[1].getEntries()[0], modification2);
-    EXPECT_EQ(q3.getEntries()[1], modification2);
-    EXPECT_EQ(q3.getMonthRecords()[1].getEntries()[1], modification3);
-    EXPECT_EQ(q3.getEntries()[2], modification3);
+    EXPECT_EQ(q3.getMonthRecords()[1].getEntries()[0], &modification2);
+    EXPECT_EQ(q3.getEntries()[1], &modification2);
+    EXPECT_EQ(q3.getMonthRecords()[1].getEntries()[1], &modification3);
+    EXPECT_EQ(q3.getEntries()[2], &modification3);
 
-    LedgerModification modification4 = LedgerModification(100, ValueType::debit, Date("09/17/2001"), "Earn $100 cash");
-    q3.addEntry(modification4);
+    JournalModification modification4 = JournalModification(100, ValueType::debit, Date("09/17/2001"), "Earn $100 cash", &cash);
+    q3.addEntry(&modification4);
 
     EXPECT_EQ(q3.getBeginningBalance(), 1000);
     EXPECT_EQ(q3.getEndingBalance(), 1300);
@@ -117,21 +119,22 @@ TEST(QuarterRecordsTests, testAddEntry) {
     EXPECT_EQ(q3.getMonthRecords()[1].getEndingBalance(), 1200);
     EXPECT_EQ(q3.getMonthRecords()[2].getBeginningBalance(), 1200);
     ASSERT_EQ(q3.getMonthRecords()[0].getEntries().size(), 1);
-    EXPECT_EQ(q3.getMonthRecords()[0].getEntries()[0], modification1);
-    EXPECT_EQ(q3.getEntries()[0], modification1);
+    EXPECT_EQ(q3.getMonthRecords()[0].getEntries()[0], &modification1);
+    EXPECT_EQ(q3.getEntries()[0], &modification1);
     ASSERT_EQ(q3.getMonthRecords()[1].getEntries().size(), 2);
-    EXPECT_EQ(q3.getMonthRecords()[1].getEntries()[0], modification2);
-    EXPECT_EQ(q3.getEntries()[1], modification2);
+    EXPECT_EQ(q3.getMonthRecords()[1].getEntries()[0], &modification2);
+    EXPECT_EQ(q3.getEntries()[1], &modification2);
     ASSERT_EQ(q3.getMonthRecords()[2].getEntries().size(), 1);
-    EXPECT_EQ(q3.getMonthRecords()[2].getEntries()[0], modification4);
-    EXPECT_EQ(q3.getEntries()[3], modification4);
+    EXPECT_EQ(q3.getMonthRecords()[2].getEntries()[0], &modification4);
+    EXPECT_EQ(q3.getEntries()[3], &modification4);
 }
 
 TEST(QuarterRecordsTests, testAddEntryThrow) {
     QuarterRecords q1(2001, 1, ValueType::debit, 1000); //Start with $1000 cash
-
+    AssetAccount cash("Cash", 2001, 1000);
+    JournalModification modification1 = JournalModification(100, ValueType::credit, Date("04/01/2001"), "Pay $100 in cash", &cash);
     EXPECT_THROW({
-        q1.addEntry(LedgerModification(100, ValueType::credit, Date("04/01/2001"), "Pay $100 in cash"));
+        q1.addEntry(&modification1);
     }, invalid_argument);
 
     EXPECT_EQ(q1.getQuarter(), 1);
@@ -142,9 +145,9 @@ TEST(QuarterRecordsTests, testAddEntryThrow) {
 
     //Test for Q2
     QuarterRecords q2(2001, 2, ValueType::debit, 1000); //Start with $1000 cash
-
+    JournalModification modification2(100, ValueType::credit, Date("03/01/2001"), "Pay $100 in cash", &cash);
     EXPECT_THROW({
-        q2.addEntry(LedgerModification(100, ValueType::credit, Date("03/01/2001"), "Pay $100 in cash"));
+        q2.addEntry(&modification2);
     }, invalid_argument);
 
     EXPECT_EQ(q2.getQuarter(), 2);
@@ -153,32 +156,36 @@ TEST(QuarterRecordsTests, testAddEntryThrow) {
         EXPECT_EQ(q2.getMonthRecords()[i].getEntries().size(), 0);
     }
 
-    q1.addEntry(LedgerModification(100, ValueType::credit, Date("03/01/2001"), "Pay $100 in cash"));
+    JournalModification modification3(100, ValueType::credit, Date("03/01/2001"), "Pay $100 in cash", &cash);
+    q1.addEntry(&modification3);
     EXPECT_THROW({
-        q1.addEntry(LedgerModification(100, ValueType::credit, Date("02/01/2001"), "Pay $100 in cash"));
+        JournalModification test(100, ValueType::credit, Date("02/01/2001"), "Pay $100 in cash", &cash);
+        q1.addEntry(&test);
     }, invalid_argument);
     EXPECT_THROW({
-        q1.addEntry(LedgerModification(100, ValueType::credit, Date("01/01/2001"), "Pay $100 in cash"));
+        JournalModification test(100, ValueType::credit, Date("01/01/2001"), "Pay $100 in cash", &cash);
+        q1.addEntry(&test);
     }, invalid_argument);
 }
 
 TEST(QuarterRecordsTests, testGetEntriesAndMonthEntries) {
     QuarterRecords q2(2001, 2, ValueType::debit, 1000); //Start with $1000 cash
-    LedgerModification aprilModification1(100, ValueType::credit, Date("04/03/2001"), "Pay $100 in cash");
-    LedgerModification mayModification1(200, ValueType::credit, Date("05/01/2001"), "Pay $200 in cash");
-    LedgerModification mayModification2(300, ValueType::credit, Date("05/02/2001"), "Pay $300 in cash");
-    LedgerModification juneModification1(700, ValueType::debit, Date("06/02/2001"), "Earn $700 in cash");
-    q2.addEntry(aprilModification1);
-    q2.addEntry(mayModification1);
-    q2.addEntry(mayModification2);
-    q2.addEntry(juneModification1);
-    vector<LedgerModification> expected = {aprilModification1, mayModification1, mayModification2, juneModification1};
+    AssetAccount cash("Cash", 2001, 1000);
+    JournalModification aprilModification1(100, ValueType::credit, Date("04/03/2001"), "Pay $100 in cash", &cash);
+    JournalModification mayModification1(200, ValueType::credit, Date("05/01/2001"), "Pay $200 in cash", &cash);
+    JournalModification mayModification2(300, ValueType::credit, Date("05/02/2001"), "Pay $300 in cash", &cash);
+    JournalModification juneModification1(700, ValueType::debit, Date("06/02/2001"), "Earn $700 in cash", &cash);
+    q2.addEntry(&aprilModification1);
+    q2.addEntry(&mayModification1);
+    q2.addEntry(&mayModification2);
+    q2.addEntry(&juneModification1);
+    vector<JournalModification*> expected = {&aprilModification1, &mayModification1, &mayModification2, &juneModification1};
 
     EXPECT_EQ(q2.getEndingBalance(), 1100);
-    EXPECT_EQ(q2.getMonthRecords()[0].getEntries()[0], aprilModification1);
-    EXPECT_EQ(q2.getMonthRecords()[1].getEntries()[0], mayModification1);
-    EXPECT_EQ(q2.getMonthRecords()[1].getEntries()[1], mayModification2);
-    EXPECT_EQ(q2.getMonthRecords()[2].getEntries()[0], juneModification1);
+    EXPECT_EQ(q2.getMonthRecords()[0].getEntries()[0], &aprilModification1);
+    EXPECT_EQ(q2.getMonthRecords()[1].getEntries()[0], &mayModification1);
+    EXPECT_EQ(q2.getMonthRecords()[1].getEntries()[1], &mayModification2);
+    EXPECT_EQ(q2.getMonthRecords()[2].getEntries()[0], &juneModification1);
     EXPECT_EQ(q2.getEntries(), expected);
 
     EXPECT_EQ(q2.getMonthRecords()[0].getBeginningBalance(), 1000);
@@ -191,8 +198,11 @@ TEST(QuarterRecordsTests, testGetEntriesAndMonthEntries) {
 
 TEST(QuarterRecordsTests, testProperMonthMaintenance) {
     QuarterRecords q3(2001, 3, ValueType::debit, 1000); //Start with $1000 cash
-    q3.addEntry(LedgerModification(100, ValueType::debit, Date("07/17/2001"), "Earn $100 cash"));
-    q3.addEntry(LedgerModification(100, ValueType::debit, Date("09/17/2001"), "Earn $100 cash"));
+    AssetAccount cash("Cash", 2001, 1000);
+    JournalModification modification1(100, ValueType::debit, Date("07/17/2001"), "Earn $100 cash", &cash);
+    q3.addEntry(&modification1);
+    JournalModification modification2(100, ValueType::debit, Date("09/17/2001"), "Earn $100 cash", &cash);
+    q3.addEntry(&modification2);
     
     EXPECT_EQ(q3.getMonthRecords()[1].getBeginningBalance(), 1100);
     EXPECT_EQ(q3.getMonthRecords()[1].getEndingBalance(), 1100);
@@ -202,7 +212,9 @@ TEST(QuarterRecordsTests, testProperMonthMaintenance) {
 
 TEST(QuarterRecordsTests, testProperMonthMaintenanceAlternate) {
     QuarterRecords q3(2001, 3, ValueType::debit, 1000); //Start with $1000 cash
-    q3.addEntry(LedgerModification(100, ValueType::debit, Date("08/17/2001"), "Earn $100 cash"));
+    AssetAccount cash("Cash", 2001, 1000);
+    JournalModification modification(100, ValueType::debit, Date("08/17/2001"), "Earn $100 cash", &cash);
+    q3.addEntry(&modification);
     
     EXPECT_EQ(q3.getMonthRecords()[0].getBeginningBalance(), 1000);
     EXPECT_EQ(q3.getMonthRecords()[0].getEndingBalance(), 1000);
@@ -214,7 +226,9 @@ TEST(QuarterRecordsTests, testProperMonthMaintenanceAlternate) {
 TEST(QuarterRecordsTests, testPeriodAdjustments) {
     QuarterRecords q1(2001, 1, ValueType::debit, 100);
     QuarterRecords q2(2001, 2, ValueType::debit, 100);
-    q1.addEntry(LedgerModification(900, ValueType::debit, Date("03/31/2001"), "Earn $900 cash"));
+    AssetAccount cash("Cash", 2001, 100);
+    JournalModification modification(900, ValueType::debit, Date("03/31/2001"), "Earn $900 cash", &cash);
+    q1.addEntry(&modification);
     q2.adjustPeriodBalances(1000); //Set the new BB and EB to 1000 to reflect changes in quarter 1 balances
 
     EXPECT_EQ(q2.getBeginningBalance(), 1000);
@@ -226,10 +240,13 @@ TEST(QuarterRecordsTests, testPeriodAdjustments) {
 }
 
 TEST(QuarterRecordsTests, testPeriodAdjustmentsThrow) {
+    AssetAccount cash("Cash", 2001, 100);
     QuarterRecords q1(2001, 1, ValueType::debit, 100);
     QuarterRecords q2(2001, 2, ValueType::debit, 100);
-    q1.addEntry(LedgerModification(900, ValueType::debit, Date("03/31/2001"), "Earn $900 cash"));
-    q2.addEntry(LedgerModification(100, ValueType::debit, Date("04/01/2001"), "Earn $100 cash")); //Now that an entry has been added to q2, modifying BB and EB shouldn't be possible
+    JournalModification modification1(900, ValueType::debit, Date("03/31/2001"), "Earn $900 cash", &cash);
+    q1.addEntry(&modification1);
+    JournalModification modification2(100, ValueType::debit, Date("04/01/2001"), "Earn $100 cash", &cash);
+    q2.addEntry(&modification2); //Now that an entry has been added to q2, modifying BB and EB shouldn't be possible
     
     EXPECT_THROW({
         q2.adjustPeriodBalances(1000); 

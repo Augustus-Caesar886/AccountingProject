@@ -5,9 +5,10 @@ using ::testing::_;
 using ::testing::InSequence;
 
 #include "../header/YearRecords.h"
-#include "../header/LedgerModification.h"
+#include "../header/JournalModification.h"
 #include "../header/ValueType.h"
 #include "../header/Date.h"
+#include "../header/AssetAccount.h"
 
 #include <stdexcept>
 using std::invalid_argument;
@@ -37,9 +38,12 @@ TEST(YearRecordsTests, testConstructor) {
 
 TEST(YearRecordsTests, addEntryThrow) {
     YearRecords fiscalYear(2001, ValueType::debit, 1000); //Start 2001 with $1000 cash
+    AssetAccount cash("Cash", 2001, 1000);
+
 
     EXPECT_THROW({
-        fiscalYear.addEntry(LedgerModification(100, ValueType::debit, Date("01/01/2002"), ""));
+        JournalModification test(100, ValueType::debit, Date("01/01/2002"), "", &cash);
+        fiscalYear.addEntry(&test);
     }, invalid_argument);
 }
 
@@ -47,7 +51,9 @@ void finalTest(const YearRecords &fiscalYear);
 
 TEST(YearRecordsTests, yearRecordsAddEntryComprehensiveTest) {
     YearRecords fiscalYear(2001, ValueType::debit, 1000); //Start 2001 with $1000 cash
-    fiscalYear.addEntry(LedgerModification(100, ValueType::debit, Date("01/03/2001"), "Earn $100 cash"));
+    AssetAccount cash("Cash", 2001, 1000);
+    JournalModification modification1(100, ValueType::debit, Date("01/03/2001"), "Earn $100 cash", &cash);
+    fiscalYear.addEntry(&modification1);
 
     EXPECT_EQ(fiscalYear.getBeginningBalance(), 1000);
     EXPECT_EQ(fiscalYear.getEndingBalance(), 1100);
@@ -71,7 +77,8 @@ TEST(YearRecordsTests, yearRecordsAddEntryComprehensiveTest) {
         }
     }
 
-    fiscalYear.addEntry(LedgerModification(200, ValueType::debit, Date("01/04/2001"), "Earn $200 cash"));
+    JournalModification modification2(200, ValueType::debit, Date("01/04/2001"), "Earn $200 cash", &cash);
+    fiscalYear.addEntry(&modification2);
 
     EXPECT_EQ(fiscalYear.getBeginningBalance(), 1000);
     EXPECT_EQ(fiscalYear.getEndingBalance(), 1300);
@@ -93,7 +100,8 @@ TEST(YearRecordsTests, yearRecordsAddEntryComprehensiveTest) {
         }
     }
 
-    fiscalYear.addEntry(LedgerModification(200, ValueType::debit, Date("02/04/2001"), "Earn $200 cash"));
+    JournalModification modification3(200, ValueType::debit, Date("02/04/2001"), "Earn $200 cash", &cash);
+    fiscalYear.addEntry(&modification3);
 
     EXPECT_EQ(fiscalYear.getBeginningBalance(), 1000);
     EXPECT_EQ(fiscalYear.getEndingBalance(), 1500);
@@ -114,8 +122,8 @@ TEST(YearRecordsTests, yearRecordsAddEntryComprehensiveTest) {
             EXPECT_EQ(fiscalYear.getQuarterRecords()[i].getMonthRecords()[j].getEndingBalance(), 1500);
         }
     }
-
-    fiscalYear.addEntry(LedgerModification(500, ValueType::debit, Date("05/04/2001"), "Earn $500 cash"));
+    JournalModification modification4(500, ValueType::debit, Date("05/04/2001"), "Earn $500 cash", &cash);
+    fiscalYear.addEntry(&modification4);
 
     EXPECT_EQ(fiscalYear.getBeginningBalance(), 1000);
     EXPECT_EQ(fiscalYear.getEndingBalance(), 2000);
@@ -143,39 +151,48 @@ TEST(YearRecordsTests, yearRecordsAddEntryComprehensiveTest) {
         }
     }
 
-    fiscalYear.addEntry(LedgerModification(100, ValueType::credit, Date("12/31/2001"), "Pay $100 cash"));
+    JournalModification modification5(100, ValueType::credit, Date("12/31/2001"), "Pay $100 cash", &cash);
+    fiscalYear.addEntry(&modification5);
     finalTest(fiscalYear);
 
     EXPECT_THROW({
-        fiscalYear.addEntry(LedgerModification(10, ValueType::debit, Date("01/07/2001"), ""));
+        JournalModification test(10, ValueType::debit, Date("01/07/2001"), "", &cash);
+        fiscalYear.addEntry(&test);
     }, invalid_argument);
     finalTest(fiscalYear);
     EXPECT_THROW({
-        fiscalYear.addEntry(LedgerModification(20, ValueType::debit, Date("04/07/2001"), ""));
+        JournalModification test(20, ValueType::debit, Date("04/07/2001"), "", &cash);
+        fiscalYear.addEntry(&test);
     }, invalid_argument);
     finalTest(fiscalYear);
     EXPECT_THROW({
-        fiscalYear.addEntry(LedgerModification(30, ValueType::debit, Date("06/07/2001"), ""));
+        JournalModification test(30, ValueType::debit, Date("06/07/2001"), "", &cash);
+        fiscalYear.addEntry(&test);
     }, invalid_argument);
     finalTest(fiscalYear);
     EXPECT_THROW({
-        fiscalYear.addEntry(LedgerModification(40, ValueType::debit, Date("07/07/2001"), ""));
+        JournalModification test(40, ValueType::debit, Date("07/07/2001"), "", &cash);
+        fiscalYear.addEntry(&test);
     }, invalid_argument);
     finalTest(fiscalYear);
     EXPECT_THROW({
-        fiscalYear.addEntry(LedgerModification(50, ValueType::debit, Date("08/07/2001"), ""));
+        JournalModification test(40, ValueType::debit, Date("07/07/2001"), "", &cash);
+        fiscalYear.addEntry(&test);
     }, invalid_argument);
     finalTest(fiscalYear);
     EXPECT_THROW({
-        fiscalYear.addEntry(LedgerModification(60, ValueType::debit, Date("09/07/2001"), ""));
+        JournalModification test(60, ValueType::debit, Date("09/07/2001"), "", &cash);
+        fiscalYear.addEntry(&test);
     }, invalid_argument);
     finalTest(fiscalYear);
     EXPECT_THROW({
-        fiscalYear.addEntry(LedgerModification(70, ValueType::debit, Date("10/07/2001"), ""));
+        JournalModification test(70, ValueType::debit, Date("10/07/2001"), "", &cash);
+        fiscalYear.addEntry(&test);
     }, invalid_argument);
     finalTest(fiscalYear);
     EXPECT_THROW({
-        fiscalYear.addEntry(LedgerModification(80, ValueType::debit, Date("11/07/2001"), ""));
+        JournalModification test(80, ValueType::debit, Date("11/07/2001"), "", &cash);
+        fiscalYear.addEntry(&test);
     }, invalid_argument);
     finalTest(fiscalYear);
 }
