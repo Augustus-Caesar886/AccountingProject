@@ -40,5 +40,6 @@ ADD_EXECUTABLE(AccountingProject
     src/JournalEntry.cpp
     src/Journal.cpp
     src/JournalEntryPoster.cpp
+    src/JournalModificationCreator.cpp
 )
 
