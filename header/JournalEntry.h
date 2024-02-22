@@ -4,15 +4,15 @@
 #include "JournalModification.h"
 #include "Date.h"
 
-#include <vector>
-using std::vector;
+#include <list>
+using std::list;
 
 #include <string>
 using std::string;
 
 class JournalEntry {
     private:
-        vector<JournalModification> accountsModified;
+        list<JournalModification> accountsModified;
         Date day;
         string description;
         ValueType lastEntryType;
@@ -22,7 +22,7 @@ class JournalEntry {
         bool validate() const;
         const Date& getDate() const { return day; }
         const string& getDescription() const { return description; }
-        const vector<JournalModification> &getModifications() const { return accountsModified; }
+        list<JournalModification> &getModifications() { return accountsModified; }
 };
 
 #endif

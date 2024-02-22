@@ -14,7 +14,7 @@ class Journal {
     public:
         Journal(const DateUnit &year) : year(year) {}
         bool journalize(const JournalEntry&);
-        const list<JournalEntry> &getEntries() const { return entries; }
+        list<JournalEntry> &getEntries() { return entries; }
         DateUnit getYear() const { return year; }
 };
 

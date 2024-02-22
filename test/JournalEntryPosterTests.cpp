@@ -43,7 +43,8 @@ TEST(JournalEntryPosterTests, testJournalPoster) {
 
     EXPECT_TRUE(entryPoster.postModification(entry1));
     EXPECT_EQ(journal.getEntries().size(), 1);
-    EXPECT_EQ(accounts.getAccount("Equipment").getEntries().size(), 1);
+    ASSERT_EQ(accounts.getAccount("Equipment").getEntries().size(), 1);
+    EXPECT_EQ(journal.getEntries().front().getModifications().front().getAffectedAccount()->getEntries()[0]->get().first, 3000);
     EXPECT_EQ(accounts.getAccount("Equipment").getBalance(), 3000);
     EXPECT_EQ(accounts.getAccount("Cash").getEntries().size(), 1);
     EXPECT_EQ(accounts.getAccount("Cash").getBalance(), 4000);
