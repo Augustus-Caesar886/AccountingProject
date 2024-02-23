@@ -30,8 +30,8 @@ TEST(JournalEntryTests, testAddModification) {
     EXPECT_TRUE(entry.validate());
 
     EXPECT_EQ(entry.getModifications().size(), 2);
-    EXPECT_EQ(entry.getModifications()[0].getAffectedAccount(), &cash);
-    EXPECT_EQ(entry.getModifications()[1].getAffectedAccount(), &accountsReceivable);
+    EXPECT_EQ(entry.getModifications().front().getAffectedAccount(), &cash);
+    EXPECT_EQ(entry.getModifications().back().getAffectedAccount(), &accountsReceivable);
 }
 
 TEST(JournalEntryTests, testAddModificationThrow) {

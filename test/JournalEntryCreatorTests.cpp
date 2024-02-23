@@ -31,8 +31,8 @@ TEST(JournalEntryCreatorTests, testJournalEntryCreator) {
     EXPECT_EQ(created.getDate(), Date("01/01/2024"));
     EXPECT_EQ(created.getDescription(), "Collect $500 cash from Accounts Receivable");
     ASSERT_EQ(created.getModifications().size(), 2);
-    EXPECT_EQ(created.getModifications()[0].get().first, 500);
-    EXPECT_EQ(created.getModifications()[0].get().second, debit);
-    EXPECT_EQ(created.getModifications()[1].get().first, 500);
-    EXPECT_EQ(created.getModifications()[1].get().second, credit);
+    EXPECT_EQ(created.getModifications().front().get().first, 500);
+    EXPECT_EQ(created.getModifications().front().get().second, debit);
+    EXPECT_EQ(created.getModifications().back().get().first, 500);
+    EXPECT_EQ(created.getModifications().back().get().second, credit);
 }

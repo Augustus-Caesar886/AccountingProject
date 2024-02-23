@@ -15,6 +15,7 @@ class YearRecords : public AccountRecords {
         void addEntry(JournalModification*);
         const vector<QuarterRecords> &getQuarterRecords() const { return quarters; }
         const vector<JournalModification*> &getEntries() const { return entries; }
+        const QuarterRecords &getMonthRecords(DateUnit month) const { return quarters[(month-1) / 3]; }
 };
 
 #endif
