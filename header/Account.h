@@ -35,6 +35,7 @@ class Account {
         const vector<JournalModification*> &getEntries() const { return records.getEntries(); }
         const vector<JournalModification*> &getQuartersEntries(DateUnit quarter) const { return records.getQuarterRecords()[quarter-1].getEntries(); }
         const vector<JournalModification*> &getMonthsEntries(DateUnit month) const { return records.getQuarterRecords()[(month-1) / 3].getMonthRecords()[(month-1) % 3].getEntries(); }
+        const YearRecords &getRecords() const { return records; }
 
         bool operator==(const Account&) const;
 };
