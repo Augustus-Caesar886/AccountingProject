@@ -17,7 +17,7 @@ int main() {
     accounts.addAccount("Accounts Receivable", Asset, 500);
     accounts.addAccount("Equipment", Asset, 3000);
     accounts.addAccount("Supplies", Asset, 800);
-    accounts.linkAccount("Equipment", "Accumulated Depreciation on Equipment", ContraAsset, 50000);
+    accounts.linkAccount("Equipment", "Accumulated Depreciation on Equipment", ContraAsset, 500);
     //Net Assets = 5300 - 500 = $4800
 
     accounts.addAccount("Accounts Payable", Liability, 600);
@@ -26,6 +26,7 @@ int main() {
 
     accounts.addAccount("Sales Revenue", Revenue);
     accounts.addAccount("Supplies Expense", Expense);
+    accounts.addAccount("Depreciation Expense", Expense);
     accounts.addAccount("Common Stock", StockholdersEquity, 20);
     accounts.addAccount("Additional Paid in Capital", StockholdersEquity, 1280);
     accounts.addAccount("Retained Earnings", StockholdersEquity, 1400);
@@ -60,19 +61,53 @@ int main() {
     entryPoster.postModification(entry3.create());
 
     //Test negative display for millions
-    JournalEntryCreator entry4(Date("01/30/2024"), "Liquidated new equipment for full value ");
-    JournalModificationCreator entry4ModificationCreator(&accounts, Date("01/30/2024"), "Liquidated new equipment for full value ");
+    JournalEntryCreator entry4(Date("01/30/2024"), "Liquidated new equipment for full value");
+    JournalModificationCreator entry4ModificationCreator(&accounts, Date("01/30/2024"), "Liquidated new equipment for full value");
     entry4.addJournalModification(entry4ModificationCreator.getJournalModification("d cash, 1000000"));
     entry4.addJournalModification(entry4ModificationCreator.getJournalModification("c equipment, 1000000"));
     entryPoster.postModification(entry4.create());
 
+    JournalEntryCreator entry5(Date("01/31/2024"), "Record supplies expense");
+    JournalModificationCreator entry5ModificationCreator(&accounts, Date("01/31/2024"), "Record supplies expense");
+    entry5.addJournalModification(entry5ModificationCreator.getJournalModification("d supplies expense, 80"));
+    entry5.addJournalModification(entry5ModificationCreator.getJournalModification("c supplies, 80"));
+    entryPoster.postModification(entry5.create());
+
+    JournalEntryCreator entry6(Date("02/01/2024"), "Collect $500 from Accounts Receivable");
+    JournalModificationCreator entry6ModificationCreator(&accounts, Date("02/01/2024"), "Collect $500 from Accounts Receivable");
+    entry6.addJournalModification(entry6ModificationCreator.getJournalModification("d cash, 500"));
+    entry6.addJournalModification(entry6ModificationCreator.getJournalModification("c ap, 500"));
+    entryPoster.postModification(entry6.create());
+
+    JournalEntryCreator entry7(Date("03/31/2024"), "Record accumulated depreciation");
+    JournalModificationCreator entry7ModificationCreator(&accounts, Date("03/31/2024"), "Record accumulated depreciation");
+    entry7.addJournalModification(entry7ModificationCreator.getJournalModification("d depreciation expense, 125"));
+    entry7.addJournalModification(entry7ModificationCreator.getJournalModification("c acc dep, 125"));
+    entryPoster.postModification(entry7.create());
+
+    JournalEntryCreator entry8(Date("04/01/2024"), "Earn $300 in sales");
+    JournalModificationCreator entry8ModificationCreator(&accounts, Date("04/01/2024"), "Earn $300 in sales");
+    entry8.addJournalModification(entry8ModificationCreator.getJournalModification("d cash, 300"));
+    entry8.addJournalModification(entry8ModificationCreator.getJournalModification("c sales, 300"));
+    entryPoster.postModification(entry8.create());
+
 
     cout << "RUNNING ACCOUNT DISPLAY TESTS" << endl;
+
+    AccountDisplayer displayCash1(&accounts.getAccount("Cash"), Period(Date("01/01/2024"), Date("02/31/2024")));
+    displayCash1.display(cout);
+   
+    AccountDisplayer displayCash2(&accounts.getAccount("Cash"), Period(Date("03/01/2024"), Date("05/31/2024")));
+    displayCash2.display(cout);
+
     AccountDisplayer displayCash(&accounts.getAccount("Cash"), Period(Date("01/01/2024"), Date("12/31/2024")));
     displayCash.display(cout);
 
     AccountDisplayer displayAR(&accounts.getAccount("ar"), Period(Date("01/01/2024"), Date("12/31/2024")));
     displayAR.display(cout);
+
+    AccountDisplayer displayAccDep(&accounts.getAccount("acc dep"), Period(Date("03/01/2024"), Date("03/31/2024")));
+    displayAccDep.display(cout);
 
     AccountDisplayer displayAP(&accounts.getAccount("ap"), Period(Date("01/01/2024"), Date("12/31/2024")));
     displayAP.display(cout);

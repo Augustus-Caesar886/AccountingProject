@@ -19,7 +19,7 @@ void QuarterRecords::addEntry(JournalModification* entry) {
         if(months[i].getEntries().size() != 0) throw invalid_argument("Entry dated " + entry->getDate().stringForm() + " is invalid for quarter " + to_string(quarter));
     }
 
-    AccountRecords::addEntry(entry);
+    AccountRecords::addEntry(entry);/*
     if(entry->getDate().month - 3 * (quarter-1) - 1 != 0 and months[entry->getDate().month - 3 * (quarter-1) - 1].getEntries().size() == 0) { //Adjust past records
         if(entry->getDate().month - 3 * (quarter-1) - 2 != 0 and months[entry->getDate().month - 3 * (quarter-1) - 2].getEntries().size() == 0) {
             months[entry->getDate().month - 3 * (quarter-1) - 2].setBeginningBalance(months[0].getEndingBalance());
@@ -27,7 +27,7 @@ void QuarterRecords::addEntry(JournalModification* entry) {
         }
         months[entry->getDate().month - 3 * (quarter-1) - 1].setBeginningBalance(months[entry->getDate().month - 3 * (quarter-1) - 2].getEndingBalance());
         months[entry->getDate().month - 3 * (quarter-1) - 1].setEndingBalance(months[entry->getDate().month - 3 * (quarter-1) - 2].getEndingBalance());
-    }
+    }*/
     months[entry->getDate().month - 3 * (quarter-1) - 1].addEntry(entry);
     quarterRecords.push_back(entry);
 
