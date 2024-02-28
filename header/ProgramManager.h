@@ -11,12 +11,12 @@ class ProgramManager {
         Journal journal;
         JournalEntryPoster entryPoster;
     public:
-        ProgramManager(DateUnit year) : accounts(year), journal(year) {}
+        ProgramManager(DateUnit year) : accounts(year), journal(year), entryPoster(&journal, &accounts) {}
 
         AccountLibrary &getAccountLibrary() { return accounts; }
         const AccountLibrary& getAccountLibrary() const { return accounts; }
 
-        const Journal& getJournal() const { return accounts; }
+        const Journal& getJournal() const { return journal; }
 
         bool postEntry(const JournalEntry& entry) { return entryPoster.postModification(entry); }
 };
