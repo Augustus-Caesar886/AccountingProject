@@ -22,6 +22,7 @@ class AccountLibrary {
         list<ExpenseAccount> expenses;
         list<GainAccount> gains;
         list<LossAccount> losses;
+        list<DividendsAccount> dividends;
         unordered_map<Account*, Account> contraLinker;
         unordered_map<string, Account*> nameLinker;
         DateUnit year;
@@ -44,6 +45,7 @@ class AccountLibrary {
         const list<ExpenseAccount> getExpenses() const { return expenses; }
         const list<GainAccount> getGains() const { return gains; }
         const list<LossAccount> getLosses() const { return losses; }
+        const list<DividendsAccount> getDividends() const { return dividends; }
 };
 
 #endif

@@ -19,6 +19,9 @@ class ProgramManager {
         const Journal& getJournal() const { return journal; }
 
         bool postEntry(const JournalEntry& entry) { return entryPoster.postModification(entry); }
+
+        //REQUIRES an account named or aliased Retained Earnings to exist
+        void postClosingEntry();
 };
 
 #endif

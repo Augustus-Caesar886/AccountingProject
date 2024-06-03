@@ -60,6 +60,18 @@ TEST(AccountLibraryTests, testAddLiability) {
     EXPECT_EQ(accounts.getAccount("Accounts Payable").getBeginningBalance(), 1000);
 }
 
+TEST(AccountLibraryTests, testAddDividend) {
+    AccountLibrary accounts(2024);
+    accounts.addAccount("Dividends", AccountType::Dividends, 10);
+
+    EXPECT_EQ(accounts.getAccount("Dividends").getName(), "Dividends");
+    EXPECT_EQ(accounts.getAccount("Dividends").getYear(), 2024);
+    EXPECT_EQ(accounts.getAccount("Dividends").getBalanceType(), ValueType::debit);
+    EXPECT_EQ(accounts.getAccount("Dividends").getAccountType(), AccountType::Dividends);
+    EXPECT_EQ(accounts.getAccount("Dividends").getBalance(), 10);
+    EXPECT_EQ(accounts.getAccount("Dividends").getBeginningBalance(), 10);
+}
+
 TEST(AccountLibraryTests, testAddAlias) {
     AccountLibrary accounts(2024);
     accounts.addAccount("Cash", AccountType::Asset, 1000);
