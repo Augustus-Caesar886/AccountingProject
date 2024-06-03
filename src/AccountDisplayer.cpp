@@ -22,8 +22,10 @@ void AccountDisplayer::display(ostream& toWrite) const {
     auto precision = toWrite.precision();
     toWrite.precision(2);
     toWrite << period.getStartDate().stringForm() << "\t" << std::right << std::setw(DEFAULT_WIDTH) << /* std::setfill(6) <<*/ std::fixed << toDisplay->getRecords().getMonthRecords(period.getStartDate().month).getBeginningBalance() << "\t| Beginning Balance" << endl;
-    for(auto it : toDisplay->getEntries()) {
-        displayEntry(toWrite, *it);
+    for(unsigned i = period.getStartDate().month; i <= period.getEndDate().month; ++i) {
+        for(auto it : toDisplay->getMonthsEntries(i)) {
+            displayEntry(toWrite, *it);
+        }
     }
     toWrite << period.getEndDate().stringForm() << "\t" << std::right << std::setw(DEFAULT_WIDTH) << /* std::setfill(6) <<*/ std::fixed << toDisplay->getRecords().getMonthRecords(period.getEndDate().month).getEndingBalance() << "\t| Ending Balance" << endl;
     toWrite << endl;

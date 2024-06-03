@@ -48,6 +48,10 @@ void AccountLibrary::addAccount(const string& name, AccountType accountType, dou
             losses.push_back(LossAccount(name, year, beginningBalance));
             nameLinker.emplace(toUpper(name), &losses.back());
             break;
+        case AccountType::Dividends:
+            dividends.push_back(DividendsAccount(name, year, beginningBalance));
+            nameLinker.emplace(toUpper(name), &dividends.back());
+            break;
         default:
             break;
     }
