@@ -3,6 +3,7 @@ using std::cout;
 using std::endl;
 using std::cin;
 using std::istream;
+using std::ostream;
 using std::string;
 
 #include <fstream>
@@ -60,7 +61,18 @@ int main() {
     }
     ProgramManager program = openFile(companyName, year);
     switch(mainMenu(program, companyName)) {
-        
+        case RECORD_TRANSACTION:
+            break;
+        case VIEW_SUMMARY:
+            break;
+        case PREPARE_DOCUMENTS:
+            break;
+        case MANAGE_ACCOUNTS:
+            break;
+        case QUIT_TO_SELECTION:
+            break;
+        case QUIT_TO_DESKTOP:
+            break;
     }
     saveAndExit(program, companyName);
     return 0;
@@ -99,8 +111,115 @@ MenuOption mainMenu(ProgramManager& program, const string& companyName) {
     }
 }
 
-void saveAndExit(ProgramManager&, const string&) {
+string accountTypeToString(AccountType at);
 
+void writeAccounts(ProgramManager& program, ostream& out);
+void writeAliases(ProgramManager& program, ostream& out);
+void writeJournal(ProgramManager& program, ostream& out);
+
+void saveAndExit(ProgramManager& program, const string& companyName) {
+    ofstream file(DATAPATH + companyName + "/" + std::to_string(program.getAccountLibrary().getYear()) + ".ar");
+
+    writeAccounts(program, file);
+    writeAliases(program, file);
+    writeJournal(program, file);
+
+    file.close();
+}
+
+void writeAccounts(ProgramManager& program, ostream& out) {
+    for(auto it : program.getAccountLibrary().getAssets()) {
+        out << it.getName() << ", " << accountTypeToString(it.getAccountType()) << ", " << it.getBeginningBalance() << endl;
+        auto linked = program.getAccountLibrary().findLinked(it.getName());
+        if(linked != nullptr) {
+            out << linked->getName() << ", " << accountTypeToString(linked->getAccountType()) << ", " << linked->getBeginningBalance() << endl;
+        }
+    }
+
+    for(auto it : program.getAccountLibrary().getLiabilities()) {
+        out << it.getName() << ", " << accountTypeToString(it.getAccountType()) << ", " << it.getBeginningBalance() << endl;
+        auto linked = program.getAccountLibrary().findLinked(it.getName());
+        if(linked != nullptr) {
+            out << linked->getName() << ", " << accountTypeToString(linked->getAccountType()) << ", " << linked->getBeginningBalance() << endl;
+        }
+    }
+
+    for(auto it : program.getAccountLibrary().getStockholdersEquity()) {
+        out << it.getName() << ", " << accountTypeToString(it.getAccountType()) << ", " << it.getBeginningBalance() << endl;
+        auto linked = program.getAccountLibrary().findLinked(it.getName());
+        if(linked != nullptr) {
+            out << linked->getName() << ", " << accountTypeToString(linked->getAccountType()) << ", " << linked->getBeginningBalance() << endl;
+        }
+    }
+
+    for(auto it : program.getAccountLibrary().getRevenues()) {
+        out << it.getName() << ", " << accountTypeToString(it.getAccountType()) << ", " << it.getBeginningBalance() << endl;
+        auto linked = program.getAccountLibrary().findLinked(it.getName());
+        if(linked != nullptr) {
+            out << linked->getName() << ", " << accountTypeToString(linked->getAccountType()) << ", " << linked->getBeginningBalance() << endl;
+        }
+    }
+
+    for(auto it : program.getAccountLibrary().getExpenses()) {
+        out << it.getName() << ", " << accountTypeToString(it.getAccountType()) << ", " << it.getBeginningBalance() << endl;
+        auto linked = program.getAccountLibrary().findLinked(it.getName());
+        if(linked != nullptr) {
+            out << linked->getName() << ", " << accountTypeToString(linked->getAccountType()) << ", " << linked->getBeginningBalance() << endl;
+        }
+    }
+
+    for(auto it : program.getAccountLibrary().getDividends()) {
+        out << it.getName() << ", " << accountTypeToString(it.getAccountType()) << ", " << it.getBeginningBalance() << endl;
+    }
+
+    for(auto it : program.getAccountLibrary().getGains()) {
+        out << it.getName() << ", " << accountTypeToString(it.getAccountType()) << ", " << it.getBeginningBalance() << endl;
+    }
+
+    for(auto it : program.getAccountLibrary().getLosses()) {
+        out << it.getName() << ", " << accountTypeToString(it.getAccountType()) << ", " << it.getBeginningBalance() << endl;
+    }
+}
+
+
+void writeAliases(ProgramManager& program, ostream& out) {
+    out << "ALIASES" << endl;
+}
+void writeJournal(ProgramManager& program, ostream& out) {
+    out << "JOURNAL" << endl;
+}
+
+string accountTypeToString(AccountType at) {
+    switch(at) {
+        case Asset:
+            return "ASSET";
+        case Liability:
+            return "LIABILITY";
+        case StockholdersEquity:
+            return "STOCKHOLDERSEQUITY";
+        case Revenue:
+            return "REVENUE";
+        case Expense:
+            return "EXPENSE";
+        case Dividends:
+            return "DIVIDENDS";
+        case GAIN:
+            return "GAIN";
+        case LOSS:
+            return "LOSS";
+        case ContraAsset:
+            return "CONTRAASSET";
+        case ContraLiability:
+            return "CONTRALIABILITY";
+        case ContraEquity:
+            return "CONTRAEQUITY";
+        case ContraRevenue:
+            return "CONTRAREVENUE";
+        case ContraExpense:
+            return "CONTRAEXPENSE";
+        default:
+            throw std::runtime_error("Could not convert account type to string");
+    }
 }
 
 bool openExisting() {
@@ -169,10 +288,12 @@ ProgramManager openFile(const string& companyName, DateUnit year) {
 }
 
 AccountType stringToAccountType(const string&);
+bool isContraAccount(AccountType);
 
 void initializeAccounts(ProgramManager& program, istream& file) {
     string line = "";
     getline(file, line);
+    Account* lastAccount = nullptr;
     while(line != ALIAS_DIVIDER) {
         string accName = "", accType = "";
         double startingBal = 0;
@@ -182,8 +303,30 @@ void initializeAccounts(ProgramManager& program, istream& file) {
         accType.erase(0, 1);
         parser >> startingBal;
         AccountType type = stringToAccountType(accType);
-        program.getAccountLibrary().addAccount(accName, type, startingBal);
+        if(isContraAccount(type)) {
+            program.getAccountLibrary().linkAccount(lastAccount->getName(), accName, type, startingBal);
+        } else {
+            program.getAccountLibrary().addAccount(accName, type, startingBal);
+            lastAccount = &program.getAccountLibrary().getAccount(accName);
+        }
         getline(file, line);
+    }
+}
+
+bool isContraAccount(AccountType at) {
+    switch(at) {
+        case ContraAsset:
+            return true;
+        case ContraLiability:
+            return true;
+        case ContraEquity:
+            return true;
+        case ContraRevenue:
+            return true;
+        case ContraExpense:
+            return true;
+        default:
+            return false;
     }
 }
 
